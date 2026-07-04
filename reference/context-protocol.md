@@ -2,16 +2,18 @@
 
 Shared by every skill in the `audit` family (`deadcode-refactor-audit`,
 `code-health-audit`, `codebase-auditor`, `cybersecurity-infra-auditor`,
-`tech-due-diligence`). One file, created on first use and read at the
-start of every run. It tracks two independent things:
+`pentest-auditor`, `deps-auditor`, `tech-due-diligence`). One file,
+created on first use and read at the start of every run. It tracks two
+independent things:
 
 - **Accepted risks / intentional decisions** — updated at the end when
   the user accepts a finding as intentional, so it doesn't get re-flagged
   as new on the next audit.
-- **Audit plan** — which of the three atomic audits (`deadcode`, `arch`,
-  `security`) have been run, when, and what was deliberately skipped each
-  time, so the family as a whole has a standing to-do list that gets
-  checked off and re-annotated as the codebase evolves.
+- **Audit plan** — which of the five atomic audits (`deadcode`, `arch`,
+  `security`, `pentest`, `deps`) have been run, when, and what was
+  deliberately skipped each time, so the family as a whole has a standing
+  to-do list that gets checked off and re-annotated as the codebase
+  evolves.
 
 ## File location and name
 
@@ -24,8 +26,8 @@ these locations for the same repo.
 
 1. Look for the file. If absent, create it immediately with the template
    below — this includes the **Audit plan** section, populated with the
-   three atomic audits (`deadcode`, `arch`, `security`) all marked
-   pending and `Started: <today's date>`. This initial creation is
+   five atomic audits (`deadcode`, `arch`, `security`, `pentest`, `deps`)
+   all marked pending and `Started: <today's date>`. This initial creation is
    bookkeeping, not a judgment call, so it doesn't need user confirmation
    (unlike appending to Accepted risks — see Write step). Tell the user in
    one line that you created it, then proceed with the audit.
@@ -70,7 +72,7 @@ Keep entries factual and short — one bullet, not a paragraph:
 - <one-line description of the finding/decision> — Accepted <YYYY-MM-DD>. Reason: <why, in the user's words or close to it>.
 ```
 
-## Audit plan write step (end of every run of `deadcode`/`arch`/`security`, confirmation required)
+## Audit plan write step (end of every run of `deadcode`/`arch`/`security`/`pentest`/`deps`, confirmation required)
 
 Unlike the plan's initial creation (auto, see Read step), updating a row
 after a run is not silent bookkeeping — it also records skip decisions,
@@ -87,12 +89,20 @@ Once confirmed:
    ```
    - <name> run <YYYY-MM-DD>. Skipped: <steps skipped and why, or "none">.
    ```
-3. Do not touch the other two audits' rows or entries — each is updated
-   only by its own run.
-4. `dd` runs all three atomic audits internally: apply this same
-   confirm-then-write step for each of the three as they complete inside
+3. Do not touch the other audits' rows or entries — each is updated only
+   by its own run.
+4. `dd` runs three of the five atomic audits internally (`deadcode`,
+   `arch`, `security` — never `pentest`, since its dynamic phase needs a
+   live-target authorization gate a due-diligence run shouldn't trigger on
+   its own, and never the full `deps` sweep, since it already runs its own
+   narrower internal dependency+CVE pass): apply this same
+   confirm-then-write step for each of those three as they complete inside
    the `dd` run, rather than adding a separate `dd` row (there isn't one —
    see template).
+5. For `pentest` specifically, note in the **Run log** line whether phase 2
+   (dynamic verification) actually ran or was skipped for lack of an
+   authorized target — e.g. `- pentest run 2026-07-04. Skipped: phase 2
+   (no authorized live target).`
 
 ## Template (used when creating the file for the first time)
 
@@ -110,15 +120,19 @@ Once confirmed:
 
 ## Audit plan
 <!-- Created automatically on first initialization of this file. Started: <YYYY-MM-DD> -->
-<!-- `dd` has no row of its own — it's composite and updates the three rows below as it runs each one internally. -->
+<!-- `dd` has no row of its own — it's composite and updates the deadcode/arch/security rows below as it runs each one internally. It never runs `pentest` or the full `deps` sweep. -->
 
 - [ ] deadcode — dead code / duplication / refactoring
 - [ ] arch — architecture, bugs, performance, readability
 - [ ] security — cybersecurity & infrastructure
+- [ ] pentest — attack-surface mapping + gated dynamic exploit verification
+- [ ] deps — EOL/support-status sweep + known-CVE scan across direct dependencies
 
 ### Run log
 <!-- Each atomic audit appends its own line here when it completes, after confirming with the user (see context-protocol.md, "Audit plan write step"). -->
 <!-- e.g. "- security run 2026-04-01. Skipped: dependency-CVE pass (no network access)." -->
+<!-- e.g. "- pentest run 2026-07-04. Skipped: phase 2 (no authorized live target)." -->
+<!-- e.g. "- deps run 2026-07-04. Skipped: none." -->
 
 ## Accepted risks / intentional decisions
 
@@ -130,6 +144,12 @@ Once confirmed:
 
 ### Architecture
 <!-- e.g. "- Anemic domain model in billing/ accepted as a deliberate trade-off for now — accepted 2026-01-20. Reason: pre-PMF, will revisit post-Series A." -->
+
+### Penetration test
+<!-- e.g. "- IDOR on /internal/reports/:id accepted — exposed only on an internal-only network, not internet-facing. Accepted 2026-07-04." -->
+
+### Dependencies
+<!-- e.g. "- Node 18 kept despite approaching EOL — accepted 2026-07-04. Reason: upgrade blocked on a transitive dep, planned for Q3." -->
 
 ### Due diligence
 <!-- e.g. "- Bus factor of 1 acknowledged and accepted for this pilot phase — accepted 2026-04-01." -->

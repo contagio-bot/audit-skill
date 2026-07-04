@@ -22,6 +22,14 @@ it degrades gracefully on non-fintech, non-personal-finance-app repos too.
   don't also separately run `audit arch` / `audit security` / `audit
   deadcode` before or after it for the same target; that duplicates work
   `tech-due-diligence` already does internally.
+- `dd` also runs its own narrower dependency/EOL/CVE pass internally (its
+  "Fase 5"). Don't additionally run `audit deps` right before or after for
+  the same target unless the user specifically wants the full
+  direct-dependency sweep `deps` provides instead of `dd`'s hand-picked
+  component list.
+- `dd` never runs `audit pentest`'s dynamic phase — mention it as a
+  separate opt-in follow-up if the user wants live exploit verification
+  too.
 - The delegated skill has its own marketplace-comparison section; if the
   user asks whether a better public skill exists for due diligence
   specifically, let that section answer rather than re-researching from
