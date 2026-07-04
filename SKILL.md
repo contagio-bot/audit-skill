@@ -57,6 +57,15 @@ each delegated skill handles the read/write itself — but if the user asks
 *where* this history lives, point them at that one file at the target
 repo's root.
 
+The same file also carries an **Audit plan**: a checklist of the three
+atomic audits (`deadcode`, `arch`, `security`) created automatically the
+first time this file is initialized for a repo, with a start date. Each
+atomic audit checks off its own row and appends a dated **Run log** entry
+(including anything it deliberately skipped) when it completes, after a
+quick confirmation with the user — see context-protocol.md for the exact
+mechanics. This is what lets the family answer "what audits has this repo
+had, when, and what did we skip" without re-deriving it from memory.
+
 ### Ambiguity handling
 
 Each delegated skill now asks the user directly (via `AskUserQuestion`)

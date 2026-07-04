@@ -12,8 +12,10 @@ up stale entries).
 
 1. Resolve the target's repo root.
 2. Tell the user you're creating `AUDIT-CONTEXT.md` there, using the
-   template in context-protocol.md.
-3. Ask what to seed it with — don't invent entries. Useful prompts:
+   template in context-protocol.md. This includes the **Audit plan**
+   section (the three atomic audits marked pending, start date = today) —
+   that part is created automatically, no need to ask about it.
+3. Ask what to seed the rest with — don't invent entries. Useful prompts:
    - "Any standing facts I should know that would otherwise look like a
      finding? (e.g. private repo used as backup, `.env` committed on
      purpose, intentional legacy code kept around)"
@@ -22,7 +24,8 @@ up stale entries).
    - If the user has nothing to add yet, create the file with just the
      template headers and stop — don't pad it with speculative entries.
 4. Write the file with `Write`, following the template structure exactly
-   (Standing facts / Accepted risks per section / Open follow-ups).
+   (Standing facts / Audit plan / Accepted risks per section / Open
+   follow-ups).
 
 ## If the file already exists
 
