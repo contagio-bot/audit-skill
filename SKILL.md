@@ -1,17 +1,19 @@
 ---
 name: audit
 description: "Router for repository audits. Use when the user asks to audit, review, or assess a codebase for dead code/duplication/refactoring, architecture/bugs/performance/readability, cybersecurity/infrastructure risk, or a full technical due diligence. Delegates to dedicated, already-tuned skills instead of re-implementing their logic; picks the project-tuned version when the target repo is personal-finance-app, and the stack-agnostic version otherwise."
-argument-hint: "[deadcode|arch|security|dd] [target]"
+argument-hint: "[deadcode|arch|security|dd|context|recheck] [target]"
 user-invocable: true
 license: MIT
 ---
 
 # Audit router
 
-Single entry point for the four audit types this toolkit supports. This
-skill does not contain audit logic itself — every sub-command loads and
-follows an existing dedicated skill file in full. Its only job is routing
-and, where relevant, picking the project-tuned variant over the generic one.
+Single entry point for the four audit types this toolkit supports, plus
+two commands for managing the standing context file directly. This skill
+does not contain audit logic itself — every sub-command loads and follows
+an existing dedicated skill/reference file in full. Its only job is
+routing and, where relevant, picking the project-tuned variant over the
+generic one.
 
 **Never re-derive the underlying methodology from memory.** Always `Read`
 the delegated `SKILL.md` (and any `references/*.md` it points to) before
@@ -25,6 +27,8 @@ running commands — that file is the source of truth, this router is not.
 | `arch [target]` | Quality | Hidden bugs, performance issues, readability, architectural smells (10-category review) | [reference/arch.md](reference/arch.md) |
 | `security [target]` | Risk | Cybersecurity weaknesses and infrastructure/operability criticalities | [reference/security.md](reference/security.md) |
 | `dd [target]` | Risk | Full technical due diligence (composes the three above + deal framing) | [reference/dd.md](reference/dd.md) |
+| `context [target]` | Context | Create or update `AUDIT-CONTEXT.md` explicitly | [reference/context.md](reference/context.md) |
+| `recheck [target]` | Context | Check only the open follow-ups in `AUDIT-CONTEXT.md` against current repo state | [reference/recheck.md](reference/recheck.md) |
 
 `target` is a path or repo; defaults to the current working directory / repo if omitted.
 
