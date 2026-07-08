@@ -28,3 +28,8 @@ one or more of its 10 rated categories, not something to re-derive here.
   (code-quality lens, not exploit/blast-radius lens).
 - If the user's request is really a full due-diligence engagement, redirect
   to `audit dd`, which already composes this skill with the others.
+- If the user's request is specifically about database/query performance
+  (indices, slow queries, query plans) rather than general architecture,
+  redirect to `audit perf` instead — this skill's "Performance &
+  Scalability" category is intentionally one of 10 categories in a
+  broader review, not a deep dive.

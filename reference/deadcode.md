@@ -5,7 +5,7 @@ no logic of its own — it delegates entirely to one of two existing skills.
 
 ## Context detection
 
-1. Resolve the target's repo root.
+1. Resolve the target's repo root per `SKILL.md` » Context detection (shared rule).
 2. If the root path contains `personal-finance-app/`, or the repo's own
    `CLAUDE.md` / `PROJECT.md` identifies it as the personal-finance-app
    monorepo:

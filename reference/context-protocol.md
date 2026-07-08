@@ -2,15 +2,16 @@
 
 Shared by every skill in the `audit` family (`deadcode-refactor-audit`,
 `code-health-audit`, `codebase-auditor`, `cybersecurity-infra-auditor`,
-`pentest-auditor`, `deps-auditor`, `tech-due-diligence`). One file,
-created on first use and read at the start of every run. It tracks two
-independent things:
+`pentest-auditor`, `deps-auditor`, `tech-due-diligence`, and `perf`, which
+carries its own methodology directly in `reference/perf.md` rather than
+delegating to an external skill). One file, created on first use and read
+at the start of every run. It tracks two independent things:
 
 - **Accepted risks / intentional decisions** — updated at the end when
   the user accepts a finding as intentional, so it doesn't get re-flagged
   as new on the next audit.
-- **Audit plan** — which of the five atomic audits (`deadcode`, `arch`,
-  `security`, `pentest`, `deps`) have been run, when, and what was
+- **Audit plan** — which of the six atomic audits (`deadcode`, `arch`,
+  `perf`, `security`, `pentest`, `deps`) have been run, when, and what was
   deliberately skipped each time, so the family as a whole has a standing
   to-do list that gets checked off and re-annotated as the codebase
   evolves.
@@ -26,8 +27,8 @@ these locations for the same repo.
 
 1. Look for the file. If absent, create it immediately with the template
    below — this includes the **Audit plan** section, populated with the
-   five atomic audits (`deadcode`, `arch`, `security`, `pentest`, `deps`)
-   all marked pending and `Started: <today's date>`. This initial creation is
+   six atomic audits (`deadcode`, `arch`, `perf`, `security`, `pentest`,
+   `deps`) all marked pending and `Started: <today's date>`. This initial creation is
    bookkeeping, not a judgment call, so it doesn't need user confirmation
    (unlike appending to Accepted risks — see Write step). Tell the user in
    one line that you created it, then proceed with the audit.
@@ -72,7 +73,7 @@ Keep entries factual and short — one bullet, not a paragraph:
 - <one-line description of the finding/decision> — Accepted <YYYY-MM-DD>. Reason: <why, in the user's words or close to it>.
 ```
 
-## Audit plan write step (end of every run of `deadcode`/`arch`/`security`/`pentest`/`deps`, confirmation required)
+## Audit plan write step (end of every run of `deadcode`/`arch`/`perf`/`security`/`pentest`/`deps`, confirmation required)
 
 Unlike the plan's initial creation (auto, see Read step), updating a row
 after a run is not silent bookkeeping — it also records skip decisions,
@@ -91,14 +92,12 @@ Once confirmed:
    ```
 3. Do not touch the other audits' rows or entries — each is updated only
    by its own run.
-4. `dd` runs three of the five atomic audits internally (`deadcode`,
-   `arch`, `security` — never `pentest`, since its dynamic phase needs a
-   live-target authorization gate a due-diligence run shouldn't trigger on
-   its own, and never the full `deps` sweep, since it already runs its own
-   narrower internal dependency+CVE pass): apply this same
-   confirm-then-write step for each of those three as they complete inside
-   the `dd` run, rather than adding a separate `dd` row (there isn't one —
-   see template).
+4. `dd` runs five of the six atomic audits internally (`deadcode`, `arch`,
+   `security`, `perf`, `deps` — never `pentest`, since its dynamic phase
+   needs a live-target authorization gate a due-diligence run shouldn't
+   trigger on its own): apply this same confirm-then-write step for each
+   of those five as they complete inside the `dd` run, rather than adding
+   a separate `dd` row (there isn't one — see template).
 5. For `pentest` specifically, note in the **Run log** line whether phase 2
    (dynamic verification) actually ran or was skipped for lack of an
    authorized target — e.g. `- pentest run 2026-07-04. Skipped: phase 2
@@ -120,10 +119,11 @@ Once confirmed:
 
 ## Audit plan
 <!-- Created automatically on first initialization of this file. Started: <YYYY-MM-DD> -->
-<!-- `dd` has no row of its own — it's composite and updates the deadcode/arch/security rows below as it runs each one internally. It never runs `pentest` or the full `deps` sweep. -->
+<!-- `dd` has no row of its own — it's composite and updates the deadcode/arch/security/perf/deps rows below as it runs each one internally. It never runs `pentest`. -->
 
 - [ ] deadcode — dead code / duplication / refactoring
 - [ ] arch — architecture, bugs, performance, readability
+- [ ] perf — performance optimization: indices, query patterns, query plans, caching/batching
 - [ ] security — cybersecurity & infrastructure
 - [ ] pentest — attack-surface mapping + gated dynamic exploit verification
 - [ ] deps — EOL/support-status sweep + known-CVE scan across direct dependencies
@@ -144,6 +144,9 @@ Once confirmed:
 
 ### Architecture
 <!-- e.g. "- Anemic domain model in billing/ accepted as a deliberate trade-off for now — accepted 2026-01-20. Reason: pre-PMF, will revisit post-Series A." -->
+
+### Performance
+<!-- e.g. "- No index on orders(status) despite full scans on the admin dashboard query — accepted 2026-07-08. Reason: table is small (<5k rows) and query runs once/day, not worth the write-path cost of an index yet." -->
 
 ### Penetration test
 <!-- e.g. "- IDOR on /internal/reports/:id accepted — exposed only on an internal-only network, not internet-facing. Accepted 2026-07-04." -->
