@@ -63,7 +63,10 @@ sufficient by itself. `context` and `recheck` are exempt: they manage
 `AUDIT-CONTEXT.md` directly and don't produce a fresh audit report.
 
 1. Resolve the target repo root the same way as context detection
-   (`git rev-parse --show-toplevel`, or cwd if no target given).
+   (`git rev-parse --show-toplevel`, or cwd if no target given). Derive
+   `{nome_progetto}` as the basename of that repo root (e.g. repo root
+   `/Users/x/contagio/personal/personal-finance-app` → `nome_progetto` =
+   `personal-finance-app`).
 2. Ensure `docs/audit/` exists under that root, creating `docs/` and
    `docs/audit/` if either is missing.
 3. Write the full analysis to
@@ -73,6 +76,10 @@ sufficient by itself. `context` and `recheck` are exempt: they manage
    duplicate-numbered file — re-running the same command same-day means
    the previous run is superseded.
 4. The report must contain, at minimum:
+   - A one-line header at the very top of the file stating the project
+     name, e.g. `Progetto: {nome_progetto}`, so reports remain
+     identifiable once copied out of `docs/audit/` into an external
+     archive (filenames alone lose that context once moved).
    - The full analysis exactly as produced by the delegated skill
      (summary, evidence, detailed findings — whatever structure that
      skill's own output format specifies).
@@ -86,9 +93,10 @@ sufficient by itself. `context` and `recheck` are exempt: they manage
    `security`, `perf`, `deps`), write five separate component reports —
    `docs/audit/deadcode-<date>.md`, `docs/audit/arch-<date>.md`,
    `docs/audit/security-<date>.md`, `docs/audit/perf-<date>.md`,
-   `docs/audit/deps-<date>.md` — each containing that component's own
-   analysis and its own "Implementazioni da fare", exactly as if that
-   component had been run standalone. Then write one additional
+   `docs/audit/deps-<date>.md` — each containing the `Progetto:
+   {nome_progetto}` header, its own analysis, and its own
+   "Implementazioni da fare", exactly as if that component had been run
+   standalone. Then write one additional
    `docs/audit/dd-<date>.md` containing only the composite layer that
    doesn't belong to any single component — deal context, executive
    summary, cross-cutting prioritized recommendations, readiness matrix —
