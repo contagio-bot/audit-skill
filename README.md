@@ -16,8 +16,8 @@ The skill now also includes:
   `batched` / `risk-based` / `sample` coverage disclosure
 - `reference/persistence-protocol.md` for `read-only` vs `persist` behavior
 - `reference/capability-protocol.md`, `reference/inventory-protocol.md`,
-  `reference/evidence-protocol.md`, and `reference/finding-schema.md` for
-  shared audit mechanics
+  `reference/evidence-protocol.md`, `reference/finding-schema.md`, and
+  `reference/output-contract.md` for shared audit mechanics
 - `scripts/` with bundled stdlib helpers for inventory, capability
   detection, normalization, comparison, validation, SARIF export, and fix-plan building
 - `schemas/` for finding, context, and report shapes

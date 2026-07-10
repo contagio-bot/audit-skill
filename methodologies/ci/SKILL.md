@@ -6,7 +6,17 @@ license: MIT
 
 # CI/CD audit
 
-Resolve the shared protocols first, then inspect:
+Resolve the shared protocols first:
+
+- `audit/reference/capability-protocol.md`
+- `audit/reference/inventory-protocol.md`
+- `audit/reference/coverage-protocol.md`
+- `audit/reference/persistence-protocol.md`
+- `audit/reference/evidence-protocol.md`
+- `audit/reference/finding-schema.md`
+- `audit/reference/output-contract.md`
+
+Then inspect:
 
 - workflow permissions
 - `pull_request_target`
@@ -17,6 +27,10 @@ Resolve the shared protocols first, then inspect:
 - branch/environment protection evidence
 - ignored exit codes / non-blocking critical tests
 - rollback and release-signing evidence
+
+## Output
+
+Follow `audit/reference/output-contract.md`.
 
 Generate the flow map:
 

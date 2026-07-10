@@ -6,7 +6,17 @@ license: MIT
 
 # Supply-chain audit
 
-Resolve the shared protocols first, then inspect:
+Resolve the shared protocols first:
+
+- `audit/reference/capability-protocol.md`
+- `audit/reference/inventory-protocol.md`
+- `audit/reference/coverage-protocol.md`
+- `audit/reference/persistence-protocol.md`
+- `audit/reference/evidence-protocol.md`
+- `audit/reference/finding-schema.md`
+- `audit/reference/output-contract.md`
+
+Then inspect:
 
 - manifests and lockfiles
 - direct and central transitive dependencies when visible
@@ -16,7 +26,9 @@ Resolve the shared protocols first, then inspect:
 - dependency confusion / typosquatting indicators
 - release provenance and artifact-signing evidence if present
 
-Output:
+## Output
+
+Follow `audit/reference/output-contract.md`.
 
 - dependency inventory
 - top transitive risks

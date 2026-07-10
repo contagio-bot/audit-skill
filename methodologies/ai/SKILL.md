@@ -6,7 +6,17 @@ license: MIT
 
 # AI audit
 
-Resolve the shared protocols first, then inspect:
+Resolve the shared protocols first:
+
+- `audit/reference/capability-protocol.md`
+- `audit/reference/inventory-protocol.md`
+- `audit/reference/coverage-protocol.md`
+- `audit/reference/persistence-protocol.md`
+- `audit/reference/evidence-protocol.md`
+- `audit/reference/finding-schema.md`
+- `audit/reference/output-contract.md`
+
+Then inspect:
 
 - prompt injection exposure
 - tool permissions and sandboxing
@@ -17,3 +27,7 @@ Resolve the shared protocols first, then inspect:
 - retrieval poisoning trust boundaries
 - cost/token/human-approval limits
 - provider and model supply-chain risk
+
+## Output
+
+Follow `audit/reference/output-contract.md`.
