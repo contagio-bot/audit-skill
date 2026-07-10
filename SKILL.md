@@ -1,151 +1,124 @@
 ---
 name: audit
-description: "Router for repository audits. Use when the user asks to audit, review, or assess a codebase for dead code/duplication/refactoring, architecture/bugs/performance/readability, cybersecurity/infrastructure risk, or a full technical due diligence. Delegates only to methodologies bundled inside this skill package, and can create repo-specific local profiles via --profile."
-argument-hint: "[deadcode|arch|security|dd|context|recheck|--profile] [target] [--read-only|--persist] [--full|--partial|--sample]"
+description: "Router for repository audits, baselines, diffs, verification, and remediation planning. Delegates only to bundled methodologies, references, schemas, and local stdlib scripts. Supports explicit coverage, persistence, capability, evidence, and export protocols without external skill dependencies."
+argument-hint: "[deadcode|arch|perf|security|pentest|deps|supply-chain|ci|testing|data|api|cloud|operability|privacy|ai|licensing|dd|baseline|diff|verify|fix-plan|issue|context|recheck|--profile] [target] [--read-only|--persist] [--full|--partial|--batched|--risk-based|--sample] [--format markdown|json|csv|sarif|github-issues]"
 user-invocable: true
 license: MIT
 ---
 
 # Audit router
 
-Single entry point for the four audit types this toolkit supports, plus
-two commands for managing the standing context file directly and one
-command for generating repo-specific audit profiles. This skill does not
-contain audit logic itself — every sub-command loads and follows a
-bundled methodology/reference file in full. Its job is routing and, where
-relevant, selecting a local profile-specific methodology over the generic
-one.
+Single entry point for the audit framework. The router stays thin:
 
-**Never re-derive the underlying methodology from memory.** Always `Read`
-the delegated local file (and any `references/*.md` it points to) before
-running commands — that file is the source of truth, this router is not.
+- recognize user intent
+- resolve target and repo root
+- resolve coverage and persistence mode
+- resolve profile and capability/inventory manifests
+- delegate to the bundled methodology/reference files needed for that command
+
+It must not inline specialist audit logic.
+
+**Never re-derive methodology from memory.** Always `Read` the delegated
+local file and any references it names before running that command.
 
 ## Commands
 
 | Command | Category | Description | Reference |
 |---|---|---|---|
 | `deadcode [target]` | Quality | Dead code, duplication, refactoring/simplification candidates | [reference/deadcode.md](reference/deadcode.md) |
-| `arch [target]` | Quality | Hidden bugs, performance issues, readability, architectural smells (10-category review) | [reference/arch.md](reference/arch.md) |
-| `security [target]` | Risk | Cybersecurity weaknesses and infrastructure/operability criticalities | [reference/security.md](reference/security.md) |
-| `dd [target]` | Risk | Full technical due diligence (composes the three above + deal framing) | [reference/dd.md](reference/dd.md) |
+| `arch [target]` | Quality | Architecture, bug risk, performance, readability, and design-smell review | [reference/arch.md](reference/arch.md) |
+| `perf [target]` | Quality | Query-path, indexing, and hot-path performance deep dive | [reference/perf.md](reference/perf.md) |
+| `security [target]` | Risk | Cybersecurity and infrastructure/operability criticalities | [reference/security.md](reference/security.md) |
+| `pentest [target]` | Risk | Static attack-surface mapping plus gated dynamic verification | [reference/pentest.md](reference/pentest.md) |
+| `deps [target]` | Risk | Runtime/dependency freshness and known-CVE sweep | [reference/deps.md](reference/deps.md) |
+| `supply-chain [target]` | Risk | Software supply-chain integrity and provenance audit | [reference/supply-chain.md](reference/supply-chain.md) |
+| `ci [target]` | Risk | CI/CD security, integrity, and reproducibility audit | [reference/ci.md](reference/ci.md) |
+| `testing [target]` | Quality | Test strategy and regression-resistance audit | [reference/testing.md](reference/testing.md) |
+| `data [target]` | Risk | Data modeling, lifecycle, and protection audit | [reference/data.md](reference/data.md) |
+| `api [target]` | Risk | API and webhook security/consistency/operability audit | [reference/api.md](reference/api.md) |
+| `cloud [target] [aws|gcp|azure|kubernetes]` | Risk | Cloud, IaC, container, and Kubernetes audit | [reference/cloud.md](reference/cloud.md) |
+| `operability [target]` | Risk | Production operability, resilience, and observability audit | [reference/operability.md](reference/operability.md) |
+| `privacy [target]` | Risk | Technical privacy-behavior audit without legal conclusions | [reference/privacy.md](reference/privacy.md) |
+| `ai [target]` | Risk | LLM/agent/ML integration risk audit | [reference/ai.md](reference/ai.md) |
+| `licensing [target]` | Risk | Dependency and asset licensing-risk audit | [reference/licensing.md](reference/licensing.md) |
+| `dd [target]` | Risk | Full technical due diligence | [reference/dd.md](reference/dd.md) |
+| `baseline [target]` | Continuity | Create or refresh an audit baseline snapshot | [reference/baseline.md](reference/baseline.md) |
+| `diff [base..head] [target]` | Continuity | Compare findings across revisions using fingerprints | [reference/diff.md](reference/diff.md) |
+| `verify [finding-id] [target]` | Continuity | Revalidate a single finding and its immediate dependencies | [reference/verify.md](reference/verify.md) |
+| `fix-plan [target]` | Remediation | Build a grouped remediation roadmap from findings | [reference/fix-plan.md](reference/fix-plan.md) |
+| `issue [finding-id] [target]` | Remediation | Generate an issue-ready remediation brief | [reference/issue.md](reference/issue.md) |
 | `context [target]` | Context | Create or update `AUDIT-CONTEXT.md` explicitly | [reference/context.md](reference/context.md) |
-| `recheck [target]` | Context | Check only the open follow-ups in `AUDIT-CONTEXT.md` against current repo state | [reference/recheck.md](reference/recheck.md) |
-| `--profile [target]` | Profiles | Create or update a local repo-specific audit profile and any dedicated methodology files it needs | [reference/profile.md](reference/profile.md) |
+| `recheck [target]` | Context | Recheck only open follow-ups against current repo state | [reference/recheck.md](reference/recheck.md) |
+| `--profile [target]` | Profiles | Create or update a local repo-specific audit profile | [reference/profile.md](reference/profile.md) |
 
-`target` is a path or repo; defaults to the current working directory / repo if omitted.
+`target` defaults to the current working directory if omitted.
 
-Optional modifiers can appear anywhere after the command:
+## Optional modifiers
 
 - `--read-only`: never create or modify files in the target repo
-- `--persist`: allow writing audit artifacts when the delegated workflow
-  calls for them
-- `--full`: intended full-repo coverage
-- `--partial`: bounded scope coverage
-- `--sample`: explicit sampling pass, not exhaustive
+- `--persist`: allow writing context/baseline/report artifacts when the delegated workflow calls for them
+- `--full`: intended exhaustive pass over the in-scope target
+- `--partial`: bounded subset only
+- `--batched`: exhaustive-by-area across batches/services
+- `--risk-based`: prioritize highest-risk surfaces first
+- `--sample`: representative sampling only
+- `--format markdown|json|csv|sarif|github-issues`: choose an output format per [reference/export-formats.md](reference/export-formats.md)
 
-### Routing rules
+## Routing rules
 
-1. **No argument**: render the table above as the user-facing command menu,
-   grouped by category. Ask what they'd like to do.
-2. **First word is `--profile`**: load
-   [reference/profile.md](reference/profile.md) and follow it exactly.
-3. **First word matches a command**: load its reference file and follow its
-   instructions exactly — including any context-detection step. Everything
-   after the command name is the `target`.
-4. **First word doesn't match any command**: general audit invocation, same
-   spirit as impeccable's free-text case. Don't guess which of the four
-   this means — ask (e.g. "review this for bugs" → `arch`, "is this
-   secure?" → `security`) since the four audits are not interchangeable and
-   picking wrong wastes the whole run.
+1. No argument: render the command menu and ask what the user wants.
+2. `--profile`: load [reference/profile.md](reference/profile.md).
+3. Known command: load its reference file and follow it exactly.
+4. Natural-language request: map it only when intent is materially clear.
+5. If ambiguity would change the outcome, ask instead of guessing.
 
-### Coverage protocol
+## Shared protocols
 
-Every audit run must classify itself using
-[reference/coverage-protocol.md](reference/coverage-protocol.md) before
-presenting findings:
+Every substantive run must resolve and apply:
 
-- `full`: intended exhaustive pass over the in-scope repo/path
-- `partial`: bounded subset, such as one package/service/path
-- `sample`: representative sampling only, used when size or constraints
-  make exhaustive review unrealistic
+- [reference/capability-protocol.md](reference/capability-protocol.md)
+- [reference/inventory-protocol.md](reference/inventory-protocol.md)
+- [reference/coverage-protocol.md](reference/coverage-protocol.md)
+- [reference/persistence-protocol.md](reference/persistence-protocol.md)
+- [reference/evidence-protocol.md](reference/evidence-protocol.md)
+- [reference/finding-schema.md](reference/finding-schema.md)
+- [reference/scoring-rubric.md](reference/scoring-rubric.md) when scoring applies
 
-Do not imply full coverage when the run was partial or sampled. State the
-coverage class, actual scope inspected, and key exclusions in the report.
+When findings are persisted, baseline-compared, or exported, also use:
 
-### Persistence mode
+- [reference/baseline-protocol.md](reference/baseline-protocol.md)
+- [reference/remediation-protocol.md](reference/remediation-protocol.md)
+- [reference/export-formats.md](reference/export-formats.md)
 
-Every audit run must also resolve a persistence mode using
-[reference/persistence-protocol.md](reference/persistence-protocol.md):
-
-- `read-only` is the default unless the user explicitly asks for writes or
-  invokes a command whose whole purpose is file management (`context`,
-  `--profile`)
-- `persist` allows creating/updating `AUDIT-CONTEXT.md` and any other
-  explicitly requested audit artifacts
-
-Do not create `AUDIT-CONTEXT.md`, reports, or profile files silently in
-`read-only` mode.
-
-### Bundled methodologies only
+## Self-contained rule
 
 This package must be self-contained. Do not delegate to `~/.claude`,
-`~/.agents`, or absolute paths on the author's machine. All delegated
-methodologies live under:
+`~/.agents`, absolute machine-local paths, or marketplace skills. All
+delegations must point to files bundled inside this package:
 
-- `methodologies/arch/`
-- `methodologies/deadcode/`
-- `methodologies/security/`
-- `methodologies/dd/`
+- `reference/`
+- `methodologies/`
 - `profiles/`
+- `scripts/`
+- `schemas/`
 
-If a needed methodology file is missing from those directories, stop and
-tell the user which bundled file is absent instead of falling back to an
-external path.
+If a needed bundled file is missing, stop and tell the user exactly which
+file is missing.
 
-### Standing context across runs
+## Standing context across runs
 
-Every delegated skill now loads `AUDIT-CONTEXT.md` (repo root, or
-`.claude/audit-context.md` / `docs/audit-context.md`) before scoping, per
-[reference/context-protocol.md](reference/context-protocol.md). This is
-what stops repeat audits from re-flagging decisions already accepted. The
-router doesn't need to do anything extra here — each delegated skill
-handles the read/write itself — but if the user asks *where* this history
-lives, point them at that one file at the target repo's root.
+If `AUDIT-CONTEXT.md` exists, delegated methodologies must read it per
+[reference/context-protocol.md](reference/context-protocol.md). This file
+records standing facts, accepted risks, audit plan state, and open
+follow-ups. In `read-only` mode it may be read but must not be modified.
 
-The same file also carries an **Audit plan**: a checklist of the three
-atomic audits (`deadcode`, `arch`, `security`) created automatically the
-first time this file is initialized in `persist` mode for a repo, with a
-start date. Each atomic audit checks off its own row and appends a dated
-**Run log** entry (including anything it deliberately skipped and what
-coverage class it used) when it completes, after confirmation with the
-user — see context-protocol.md for the exact mechanics.
+## Adding a new area
 
-### Ambiguity handling
+To add another audit area later:
 
-Each delegated skill now asks the user directly (via `AskUserQuestion`)
-when it hits genuine ambiguity it can't resolve from the repo alone —
-unclear scope in a monorepo, missing/stale conventions, unclear trust
-boundaries, unspecified due-diligence purpose/audience. Don't pre-empt
-that by guessing here in the router; let the delegated skill's own
-judgment call decide whether to ask.
+1. add one router row above
+2. add one `reference/<name>.md`
+3. add one bundled methodology under `methodologies/`
+4. update tests, schemas, and protocols if the new area changes shared behavior
 
-### Context detection (shared rule)
-
-Before delegating, resolve the target's repo root (`git rev-parse
---show-toplevel` from the target, or cwd if no target was given) and look
-for a matching file under `profiles/*.md`. A profile can match by repo
-name, root path fragment, marker files, package name, or explicit
-convention text. If a profile matches and it points to a dedicated local
-methodology file, use that methodology. Otherwise use the generic bundled
-methodology for that audit type.
-
-If no profile matches and the user wants a dedicated repo-tuned variant,
-use `audit --profile [target]` first to create one.
-
-## Adding a new audit type
-
-If a fifth audit type is needed later: create the dedicated skill first
-(or confirm one already exists), then add one row to the table above and
-one short `reference/<name>.md` that says which skill file to load and
-under what conditions. Keep it bundled inside this package. Do not inline
-the new skill's logic into this router.
+Do not inline the new area's logic into this router.

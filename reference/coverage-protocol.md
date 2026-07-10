@@ -28,6 +28,29 @@ Use `partial` when scope is deliberately bounded:
 State the exact boundary. Example: "partial coverage: backend/api and
 backend/domain only; frontend and infra excluded."
 
+### `batched`
+
+Use `batched` when the review can still be exhaustive for the requested
+scope, but only area-by-area or service-by-service:
+
+- large monorepos
+- several independently deployable units
+- one audit split across clear subsystem batches
+
+### `risk-based`
+
+Use `risk-based` when the run intentionally prioritizes the highest-risk
+surfaces first:
+
+- auth/authz
+- payments
+- public entry points
+- secret handling
+- deploy/infrastructure
+- sensitive data paths
+
+State which areas were prioritized and which were deprioritized.
+
 ### `sample`
 
 Use `sample` when the run is necessarily non-exhaustive:
@@ -44,16 +67,19 @@ State the sampling rationale, what was sampled, and the main blind spots.
 1. Prefer `full` when the repo/path is reasonably inspectable.
 2. Use `partial` instead of `sample` when the boundary is clear and
    deliberate.
-3. Use `sample` when the boundary is fuzzy or constraints prevent
+3. Use `batched` when scope is broad but partitionable.
+4. Use `risk-based` when constraints force prioritization by risk rather
+   than equal coverage.
+5. Use `sample` when the boundary is fuzzy or constraints prevent
    exhausting the intended scope.
-4. If a run starts as `full` but cannot complete, downgrade it to
-   `sample` or `partial` in the final output and explain why.
+6. If a run starts as `full` but cannot complete, downgrade it in the
+   final output and explain why.
 
 ## Mandatory output
 
 Every audit report or chat result must include:
 
-- `Coverage`: `full` / `partial` / `sample`
+- `Coverage`: `full` / `partial` / `batched` / `risk-based` / `sample`
 - `Scope inspected`: concrete paths or components
 - `Excluded areas`: concrete paths or reasons
 - `Confidence impact`: one short sentence if coverage was not `full`

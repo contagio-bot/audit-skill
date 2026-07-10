@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "standing_facts": {"type": "array"},
+    "audit_plan": {"type": "array"},
+    "accepted_risks": {"type": "array"},
+    "open_followups": {"type": "array"}
+  }
+}

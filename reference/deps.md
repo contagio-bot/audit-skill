@@ -1,26 +1,21 @@
 # audit deps
 
 Fast, isolated dependency/runtime freshness sweep: EOL/support-status
-across every direct dependency, plus a known-CVE scan. This command has
-no logic of its own — it delegates entirely to an existing skill.
+across direct dependencies and primary runtimes, plus a known-CVE scan.
+This command has no logic of its own — it delegates entirely to a bundled
+local methodology.
 
 ## Delegation
 
-`Read` and follow **`~/.claude/skills/deps-auditor/SKILL.md`** in full.
+`Read` and follow **`methodologies/deps/SKILL.md`** in full.
 
-No context branching is needed here: the skill auto-detects every
-ecosystem present in the target repo and adapts its tooling accordingly.
-Use it unchanged for any target.
+No context branching is needed here: the bundled methodology
+auto-detects ecosystems and adapts its tooling accordingly.
 
 ## Notes
 
-- `dd` now composes this full `deps` sweep internally (its own
-  `docs/audit/deps-<date>.md` component report — see `reference/dd.md` »
-  "Additional composed audits"), alongside `tech-due-diligence`'s lighter
-  "Fase 5 — Dependency & Runtime Currency" narrative. If the user just ran
-  `dd`, don't re-run `deps` right after for the same repo unless they
-  specifically want a fresher check between `dd` runs — point them at the
-  `deps` component report from that `dd` run instead.
+- `dd` may reuse the same evidence categories, but `deps` remains the
+  dedicated narrower pass for dependency/runtimes specifically.
 - `arch`'s "Dependency & Runtime Currency" category is intentionally
   narrower (4-5 central components, one line in a 10-category review) —
   don't treat it as equivalent to `deps` if the user wants full coverage.

@@ -1,0 +1,24 @@
+{
+  "findings": [
+    {
+      "id": "SEC-001",
+      "title": "Missing authz check",
+      "audit_type": "api",
+      "category": "authorization",
+      "classification": "Observed",
+      "affected_paths": ["app/routes/invoices.py"],
+      "fingerprint": "api-authz-missing-owner",
+      "evidence": ["E-001"]
+    },
+    {
+      "id": "CI-001",
+      "title": "Mutable GitHub Action ref",
+      "audit_type": "ci",
+      "category": "workflow-integrity",
+      "classification": "Observed",
+      "affected_paths": [".github/workflows/release.yml"],
+      "fingerprint": "ci-mutable-action-release",
+      "evidence": ["E-002"]
+    }
+  ]
+}

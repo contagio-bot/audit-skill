@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["coverage", "persistence_mode", "findings"],
+  "properties": {
+    "coverage": {"type": "string"},
+    "persistence_mode": {"type": "string"},
+    "findings": {"type": "array", "items": {"$ref": "finding.schema.json"}}
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["id", "title", "classification", "affected_paths", "fingerprint"],
+  "properties": {
+    "id": {"type": "string"},
+    "title": {"type": "string"},
+    "audit_type": {"type": "string"},
+    "category": {"type": "string"},
+    "classification": {"enum": ["Observed", "Inferred", "Not verifiable"]},
+    "severity": {"type": "string"},
+    "confidence": {"type": "string"},
+    "affected_paths": {"type": "array", "items": {"type": "string"}},
+    "fingerprint": {"type": "string"},
+    "evidence": {"type": "array", "items": {"type": "string"}}
+  }
+}
