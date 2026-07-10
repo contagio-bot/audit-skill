@@ -10,10 +10,10 @@ up stale entries).
 
 ## If the file doesn't exist yet
 
-1. Resolve the target's repo root per `SKILL.md` » Context detection (shared rule).
+1. Resolve the target's repo root.
 2. Tell the user you're creating `AUDIT-CONTEXT.md` there, using the
    template in context-protocol.md. This includes the **Audit plan**
-   section (the six atomic audits marked pending, start date = today) —
+   section (the three atomic audits marked pending, start date = today) —
    that part is created automatically, no need to ask about it.
 3. Ask what to seed the rest with — don't invent entries. Useful prompts:
    - "Any standing facts I should know that would otherwise look like a
