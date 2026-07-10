@@ -10,6 +10,11 @@ production failure modes. Work only from evidence in the repository,
 command output, and explicitly cited external sources for runtime/version
 support status.
 
+Resolve coverage and persistence first:
+
+- follow `audit/reference/coverage-protocol.md`
+- follow `audit/reference/persistence-protocol.md`
+
 ## Scope
 
 Always inspect:
@@ -63,6 +68,7 @@ Then provide:
 - dependency/runtime currency summary with dates
 - residual unknowns
 - prioritized remediation backlog
+- coverage and persistence disclosure
 
 ## Standard
 

@@ -21,6 +21,7 @@ combines:
 3. Review the entire repo, not a random sample.
 4. Security findings fail closed when something important is not verifiable.
 5. Execute commands; do not limit the review to static reading.
+6. Declare coverage and persistence mode explicitly in the final output.
 
 ## Phase -1 — standing audit context
 
@@ -28,6 +29,11 @@ Check `AUDIT-CONTEXT.md` at the repo root (or `.claude/audit-context.md`
 / `docs/audit-context.md`). If present, read it and follow
 `audit/reference/context-protocol.md`. Match against all sections,
 including Security, Dead code, Architecture, and Due diligence.
+
+Resolve coverage and persistence first:
+
+- follow `audit/reference/coverage-protocol.md`
+- follow `audit/reference/persistence-protocol.md`
 
 ## Phase 0 — deal context
 

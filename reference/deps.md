@@ -10,7 +10,7 @@ no logic of its own — it delegates entirely to an existing skill.
 
 No context branching is needed here: the skill auto-detects every
 ecosystem present in the target repo and adapts its tooling accordingly.
-Use it unchanged for any target, including personal-finance-app.
+Use it unchanged for any target.
 
 ## Notes
 

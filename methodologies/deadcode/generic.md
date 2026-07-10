@@ -18,6 +18,11 @@ and follow `audit/reference/context-protocol.md`. Findings that match an
 accepted entry should be listed under "Previously accepted, not
 re-flagged" instead of reported as new.
 
+Resolve coverage and persistence first:
+
+- follow `audit/reference/coverage-protocol.md`
+- follow `audit/reference/persistence-protocol.md`
+
 ## Step 0 — detect stack
 
 Check for `package.json` (frontend/JS-TS) and `pyproject.toml` /
@@ -96,3 +101,11 @@ Use three tiers:
 
 Each item should include file references, a short reason, and whether it
 is safe to auto-fix or needs human review.
+
+The output must also disclose:
+
+- Coverage
+- Scope inspected
+- Excluded areas
+- Persistence mode
+- Writes performed or skipped

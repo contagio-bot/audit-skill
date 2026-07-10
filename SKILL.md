@@ -1,7 +1,7 @@
 ---
 name: audit
 description: "Router for repository audits. Use when the user asks to audit, review, or assess a codebase for dead code/duplication/refactoring, architecture/bugs/performance/readability, cybersecurity/infrastructure risk, or a full technical due diligence. Delegates only to methodologies bundled inside this skill package, and can create repo-specific local profiles via --profile."
-argument-hint: "[deadcode|arch|security|dd|context|recheck|--profile] [target]"
+argument-hint: "[deadcode|arch|security|dd|context|recheck|--profile] [target] [--read-only|--persist] [--full|--partial|--sample]"
 user-invocable: true
 license: MIT
 ---
@@ -34,6 +34,15 @@ running commands — that file is the source of truth, this router is not.
 
 `target` is a path or repo; defaults to the current working directory / repo if omitted.
 
+Optional modifiers can appear anywhere after the command:
+
+- `--read-only`: never create or modify files in the target repo
+- `--persist`: allow writing audit artifacts when the delegated workflow
+  calls for them
+- `--full`: intended full-repo coverage
+- `--partial`: bounded scope coverage
+- `--sample`: explicit sampling pass, not exhaustive
+
 ### Routing rules
 
 1. **No argument**: render the table above as the user-facing command menu,
@@ -48,6 +57,34 @@ running commands — that file is the source of truth, this router is not.
    this means — ask (e.g. "review this for bugs" → `arch`, "is this
    secure?" → `security`) since the four audits are not interchangeable and
    picking wrong wastes the whole run.
+
+### Coverage protocol
+
+Every audit run must classify itself using
+[reference/coverage-protocol.md](reference/coverage-protocol.md) before
+presenting findings:
+
+- `full`: intended exhaustive pass over the in-scope repo/path
+- `partial`: bounded subset, such as one package/service/path
+- `sample`: representative sampling only, used when size or constraints
+  make exhaustive review unrealistic
+
+Do not imply full coverage when the run was partial or sampled. State the
+coverage class, actual scope inspected, and key exclusions in the report.
+
+### Persistence mode
+
+Every audit run must also resolve a persistence mode using
+[reference/persistence-protocol.md](reference/persistence-protocol.md):
+
+- `read-only` is the default unless the user explicitly asks for writes or
+  invokes a command whose whole purpose is file management (`context`,
+  `--profile`)
+- `persist` allows creating/updating `AUDIT-CONTEXT.md` and any other
+  explicitly requested audit artifacts
+
+Do not create `AUDIT-CONTEXT.md`, reports, or profile files silently in
+`read-only` mode.
 
 ### Bundled methodologies only
 
@@ -70,21 +107,18 @@ external path.
 Every delegated skill now loads `AUDIT-CONTEXT.md` (repo root, or
 `.claude/audit-context.md` / `docs/audit-context.md`) before scoping, per
 [reference/context-protocol.md](reference/context-protocol.md). This is
-what stops repeat audits from re-flagging decisions already accepted (e.g.
-a private repo intentionally used as the only backup, with `.env`
-committed on purpose). The router doesn't need to do anything extra here —
-each delegated skill handles the read/write itself — but if the user asks
-*where* this history lives, point them at that one file at the target
-repo's root.
+what stops repeat audits from re-flagging decisions already accepted. The
+router doesn't need to do anything extra here — each delegated skill
+handles the read/write itself — but if the user asks *where* this history
+lives, point them at that one file at the target repo's root.
 
 The same file also carries an **Audit plan**: a checklist of the three
 atomic audits (`deadcode`, `arch`, `security`) created automatically the
-first time this file is initialized for a repo, with a start date. Each
-atomic audit checks off its own row and appends a dated **Run log** entry
-(including anything it deliberately skipped) when it completes, after a
-quick confirmation with the user — see context-protocol.md for the exact
-mechanics. This is what lets the family answer "what audits has this repo
-had, when, and what did we skip" without re-deriving it from memory.
+first time this file is initialized in `persist` mode for a repo, with a
+start date. Each atomic audit checks off its own row and appends a dated
+**Run log** entry (including anything it deliberately skipped and what
+coverage class it used) when it completes, after confirmation with the
+user — see context-protocol.md for the exact mechanics.
 
 ### Ambiguity handling
 

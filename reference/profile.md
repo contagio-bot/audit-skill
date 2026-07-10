@@ -101,10 +101,10 @@ pick it.
 
 ## Example
 
-`personal-finance-app` is the model:
+For a repo named `acme-platform`:
 
-- `profiles/personal-finance-app.md`
-- `methodologies/deadcode/personal-finance-app.md`
-- `methodologies/security/personal-finance-app.md`
+- `profiles/acme-platform.md`
+- `methodologies/deadcode/acme-platform.md`
+- `methodologies/security/acme-platform.md`
 
 Use that shape for future repos unless there is a better reason not to.

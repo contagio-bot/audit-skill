@@ -26,7 +26,9 @@ paying for a full re-audit.
      specific follow-up is addressed; don't guess, list it separately and
      ask the user to judge.
 4. Report item by item, grouped by classification, most actionable first
-   (Still open, then Ambiguous, then Resolved).
+   (Still open, then Ambiguous, then Resolved). If an accepted risk entry
+   is now stale or its invalidation condition has been met, include a
+   separate **No longer applicable** group.
 5. Offer to update the file: for confirmed **Resolved** items, remove them
    from Open follow-ups (ask once per batch, not once per item, unless the
    user wants line-by-line control). For items the user says are now
