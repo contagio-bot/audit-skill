@@ -10,6 +10,8 @@ Read and follow:
 - `reference/finding-schema.md`
 - `reference/persistence-protocol.md`
 - `scripts/normalize_findings.py`
+- `scripts/save_baseline.py`
+- `scripts/load_baseline.py`
 
 ## Workflow
 

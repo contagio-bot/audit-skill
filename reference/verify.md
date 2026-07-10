@@ -8,6 +8,7 @@ Read and follow:
 
 - `reference/finding-schema.md`
 - `reference/baseline-protocol.md`
+- `scripts/load_baseline.py`
 
 ## Workflow
 

@@ -3,6 +3,10 @@
 Use this contract for all specialist methodologies unless a more specific
 output template explicitly overrides it.
 
+Validate the report with:
+
+- `scripts/validate_output_contract.py`
+
 ## Required sections
 
 1. **Executive summary**

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["audit_type", "repository_root", "scope", "commit", "coverage", "persistence_mode", "timestamp", "findings"],
+  "properties": {
+    "audit_type": {"type": "string"},
+    "repository_root": {"type": "string"},
+    "scope": {"type": "string"},
+    "commit": {"type": "string"},
+    "coverage": {"type": "string"},
+    "persistence_mode": {"type": "string"},
+    "timestamp": {"type": "string"},
+    "findings": {"type": "array"},
+    "evidence": {"type": "array"}
+  }
+}
