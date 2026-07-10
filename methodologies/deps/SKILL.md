@@ -14,6 +14,7 @@ Resolve first:
 - `audit/reference/persistence-protocol.md`
 - `audit/reference/evidence-protocol.md`
 - `audit/reference/finding-schema.md`
+- `audit/reference/output-contract.md`
 
 ## Goal
 
@@ -36,7 +37,10 @@ Inspect:
 
 ## Output
 
+Follow `audit/reference/output-contract.md`.
+
+Area-specific addendum:
+
 - inventory of ecosystems
-- top runtime/dependency risks
-- explicit `Observed` / `Inferred` / `Not verifiable`
-- normalized findings when structured output is requested
+- runtime/dependency risk summary
+- support/EOL unknowns when network is unavailable

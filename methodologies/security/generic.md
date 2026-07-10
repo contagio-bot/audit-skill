@@ -12,8 +12,13 @@ support status.
 
 Resolve coverage and persistence first:
 
+- follow `audit/reference/capability-protocol.md`
+- follow `audit/reference/inventory-protocol.md`
 - follow `audit/reference/coverage-protocol.md`
 - follow `audit/reference/persistence-protocol.md`
+- follow `audit/reference/evidence-protocol.md`
+- follow `audit/reference/finding-schema.md`
+- follow `audit/reference/output-contract.md`
 
 ## Scope
 
@@ -52,23 +57,14 @@ session/cookie mechanism, secret-loading approach, scheduler/queue
 system, and sensitive third-party integrations. Adapt the grep patterns
 to what the repo actually uses.
 
-## Output contract
+## Output
 
-Findings come first, ordered by severity. Each finding should include:
+Follow `audit/reference/output-contract.md`.
 
-- severity
-- why it matters
-- evidence with repo path and line
-- exploit or failure scenario
-- remediation
+Area-specific addendum:
 
-Then provide:
-
-- concise overall risk summary
 - dependency/runtime currency summary with dates
-- residual unknowns
-- prioritized remediation backlog
-- coverage and persistence disclosure
+- residual unknowns for runtime/deploy behavior
 
 ## Standard
 

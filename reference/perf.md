@@ -20,6 +20,16 @@ under "Previously accepted (not re-flagged)" per that protocol. At the
 end, offer to persist any newly-accepted finding under a **Performance**
 section (create it if the file predates this command).
 
+Resolve the shared protocols first:
+
+- `reference/capability-protocol.md`
+- `reference/inventory-protocol.md`
+- `reference/coverage-protocol.md`
+- `reference/persistence-protocol.md`
+- `reference/evidence-protocol.md`
+- `reference/finding-schema.md`
+- `reference/output-contract.md`
+
 ## Scope check (ask, don't guess)
 
 Use `AskUserQuestion` when genuinely unclear from the repo/request —
@@ -86,36 +96,16 @@ otherwise proceed:
    scheduled; whether jobs themselves have the same N+1/indexing issues
    as request-path code.
 
-## Output format
+## Output
 
-### 1. Summary
+Follow `reference/output-contract.md`.
 
-- Datastore(s) and ORM/query layer in use.
-- Whether this run had live access (real `EXPLAIN` output) or was
-  static-only — state this once, up front, since it bounds every claim's
-  confidence.
-- 2–3 top strengths, 2–3 top concerns, top 3–5 risks — each prefixed
-  `[Observed]`, `[Inferred]`, or `[Not verifiable from repo]`.
+Area-specific addendum:
 
-### 2. Findings by area
-
-For each of the 7 analysis steps above that found anything (skip areas
-with nothing to report, note `None found`):
-
-- **Area name**
-- Findings as a bullet list, each tagged with severity
-  (`[Critical]`/`[Major]`/`[Minor]`/`[Nice-to-have]`) and evidence tag
-  (`[Observed]`/`[Inferred]`/`[Not verifiable from repo]`).
-- Cite the exact file/table/column/query, never a vague area reference.
-
-### 3. Prioritized recommendations
-
-Table: `Recommendation | Area | Impact (High/Medium/Low) | Effort
-(High/Medium/Low) | Evidence`. Order by impact-to-effort ratio, most
-worthwhile first. Each recommendation must be concrete enough to act on
-directly (e.g. "add composite index on `orders(customer_id,
-created_at)` — currently only `customer_id` is indexed, and the
-dashboard query filters+sorts on both", not "improve query performance").
+- datastore/query-layer summary
+- live-access vs static-only disclosure
+- findings grouped by the 7 analysis areas
+- prioritized recommendation table with `Recommendation | Area | Impact | Effort | Evidence`
 
 ## Notes
 

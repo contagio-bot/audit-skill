@@ -32,8 +32,13 @@ including Security, Dead code, Architecture, and Due diligence.
 
 Resolve coverage and persistence first:
 
+- follow `audit/reference/capability-protocol.md`
+- follow `audit/reference/inventory-protocol.md`
 - follow `audit/reference/coverage-protocol.md`
 - follow `audit/reference/persistence-protocol.md`
+- follow `audit/reference/evidence-protocol.md`
+- follow `audit/reference/finding-schema.md`
+- follow `audit/reference/output-contract.md`
 
 ## Phase 0 — deal context
 
@@ -68,6 +73,10 @@ Mandatory structure:
 8. Build, deploy, ops
 9. Team & process inference
 10. Final report using the bundled output template
+
+The final report must still satisfy `audit/reference/output-contract.md`;
+the DD template is the due-diligence-specific addendum on top of the
+shared contract, not a replacement for it.
 
 ## Notes
 

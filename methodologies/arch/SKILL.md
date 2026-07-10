@@ -17,6 +17,17 @@ Distinguish carefully between:
 - `Inferred`
 - `Not verifiable from repo`
 
+Resolve the shared protocols first:
+
+- `audit/reference/capability-protocol.md`
+- `audit/reference/inventory-protocol.md`
+- `audit/reference/coverage-protocol.md`
+- `audit/reference/persistence-protocol.md`
+- `audit/reference/evidence-protocol.md`
+- `audit/reference/finding-schema.md`
+- `audit/reference/scoring-rubric.md`
+- `audit/reference/output-contract.md`
+
 ## Standing audit context
 
 Check for `AUDIT-CONTEXT.md` at the repo root (or `.claude/audit-context.md`
@@ -69,40 +80,12 @@ Show a brief overview of:
 
 Use only actual repo paths.
 
-## Output format
+## Output
 
-### 1. High-level summary
+Follow `audit/reference/output-contract.md`.
 
-Include:
+Area-specific addendum:
 
-- table with main languages, DB/messaging, deploy/hosting, architecture style
-- 2-3 strengths
-- 2-3 concerns
-- top 3-5 risks
-- any `N/A` categories with reason
-
-Prefix substantive bullets with `Observed`, `Inferred`, or
-`Not verifiable from repo`.
-
-### 2. Evidence & method
-
-List:
-
-- commands / tools used
-- coverage boundaries
-- excluded areas and why
-
-### 3. Detailed findings
-
-For each category:
-
-- `Rating (0-10): X` or `N/A`
-- short verdict
-- key strengths
-- key issues with file references
-- concrete recommendations
-
-### 4. Final scorecard
-
-Provide a category table and overall rating, explaining the denominator if
-some categories are `N/A`.
+- category-by-category scorecard
+- any `N/A` or `Not scored` category with reason
+- overall denominator explanation

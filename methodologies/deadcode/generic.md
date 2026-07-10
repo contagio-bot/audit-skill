@@ -20,8 +20,13 @@ re-flagged" instead of reported as new.
 
 Resolve coverage and persistence first:
 
+- follow `audit/reference/capability-protocol.md`
+- follow `audit/reference/inventory-protocol.md`
 - follow `audit/reference/coverage-protocol.md`
 - follow `audit/reference/persistence-protocol.md`
+- follow `audit/reference/evidence-protocol.md`
+- follow `audit/reference/finding-schema.md`
+- follow `audit/reference/output-contract.md`
 
 ## Step 0 — detect stack
 
@@ -102,10 +107,10 @@ Use three tiers:
 Each item should include file references, a short reason, and whether it
 is safe to auto-fix or needs human review.
 
-The output must also disclose:
+Follow `audit/reference/output-contract.md`.
 
-- Coverage
-- Scope inspected
-- Excluded areas
-- Persistence mode
-- Writes performed or skipped
+Area-specific addendum:
+
+- confirmed dead code
+- duplication clusters
+- structural refactoring candidates
