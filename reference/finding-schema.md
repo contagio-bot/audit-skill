@@ -29,6 +29,10 @@ recommendation: Enforce tenant and owner checks in the repository layer.
 fingerprint: api:invoice-id:missing-owner-check
 first_seen: 2026-07-10
 last_seen: 2026-07-10
+schema_version: "1.0"
+framework_version: "0.4.0"
+methodology_version: "api/1.0"
+fingerprint_version: "1"
 ```
 
 ## Required rules

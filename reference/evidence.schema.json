@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["id", "type", "summary"],
+  "properties": {
+    "id": {"type": "string"},
+    "type": {"enum": ["file", "command", "inference"]},
+    "source": {"type": "string"},
+    "command": {"type": "string"},
+    "location": {"type": "string"},
+    "summary": {"type": "string"}
+  }
+}

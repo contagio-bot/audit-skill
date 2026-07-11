@@ -1,10 +1,22 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
-  "required": ["coverage", "persistence_mode", "findings"],
+  "required": [
+    "schema_version",
+    "framework_version",
+    "coverage",
+    "persistence_mode",
+    "findings"
+  ],
   "properties": {
-    "coverage": {"type": "string"},
-    "persistence_mode": {"type": "string"},
+    "schema_version": {"const": "1.0"},
+    "framework_version": {"type": "string"},
+    "methodology_version": {"type": "string"},
+    "fingerprint_version": {"type": "string"},
+    "coverage": {
+      "enum": ["full", "partial", "batched", "risk-based", "sample"]
+    },
+    "persistence_mode": {"enum": ["read-only", "persist"]},
     "findings": {"type": "array", "items": {"$ref": "finding.schema.json"}}
   }
 }

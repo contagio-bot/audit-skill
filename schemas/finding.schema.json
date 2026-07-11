@@ -1,17 +1,98 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
-  "required": ["id", "title", "classification", "affected_paths", "fingerprint"],
+  "required": [
+    "id",
+    "title",
+    "audit_type",
+    "category",
+    "status",
+    "classification",
+    "severity",
+    "confidence",
+    "impact",
+    "priority",
+    "summary",
+    "evidence",
+    "affected_paths",
+    "scope",
+    "recommendation",
+    "fingerprint",
+    "first_seen",
+    "last_seen"
+  ],
   "properties": {
+    "schema_version": {"const": "1.0"},
+    "framework_version": {"type": "string"},
+    "methodology_version": {"type": "string"},
+    "fingerprint_version": {"type": "string"},
     "id": {"type": "string"},
     "title": {"type": "string"},
-    "audit_type": {"type": "string"},
+    "audit_type": {
+      "enum": [
+        "deadcode",
+        "arch",
+        "perf",
+        "security",
+        "pentest",
+        "deps",
+        "supply-chain",
+        "ci",
+        "testing",
+        "data",
+        "api",
+        "cloud",
+        "operability",
+        "privacy",
+        "ai",
+        "licensing",
+        "dd",
+        "baseline",
+        "diff",
+        "verify",
+        "fix-plan",
+        "issue",
+        "context",
+        "recheck"
+      ]
+    },
     "category": {"type": "string"},
+    "status": {
+      "enum": [
+        "new",
+        "existing",
+        "changed",
+        "resolved",
+        "accepted",
+        "deferred",
+        "false-positive",
+        "not-verifiable",
+        "superseded",
+        "regressed"
+      ]
+    },
     "classification": {"enum": ["Observed", "Inferred", "Not verifiable"]},
-    "severity": {"type": "string"},
-    "confidence": {"type": "string"},
-    "affected_paths": {"type": "array", "items": {"type": "string"}},
+    "severity": {"enum": ["critical", "high", "medium", "low", "info", "n/a"]},
+    "confidence": {"enum": ["high", "medium", "low", "n/a"]},
+    "exploitability": {"enum": ["high", "medium", "low", "n/a"]},
+    "likelihood": {"enum": ["high", "medium", "low", "n/a"]},
+    "impact": {"enum": ["high", "medium", "low", "n/a"]},
+    "priority": {"enum": ["P0", "P1", "P2", "P3", "P4"]},
+    "summary": {"type": "string"},
+    "evidence": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1
+    },
+    "affected_paths": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1
+    },
+    "scope": {"type": "object"},
+    "recommendation": {"type": "string"},
     "fingerprint": {"type": "string"},
-    "evidence": {"type": "array", "items": {"type": "string"}}
+    "first_seen": {"type": "string"},
+    "last_seen": {"type": "string"}
   }
 }

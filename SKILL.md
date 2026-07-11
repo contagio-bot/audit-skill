@@ -82,6 +82,9 @@ Every substantive run must resolve and apply:
 - [reference/persistence-protocol.md](reference/persistence-protocol.md)
 - [reference/evidence-protocol.md](reference/evidence-protocol.md)
 - [reference/finding-schema.md](reference/finding-schema.md)
+- [reference/finding-lifecycle.md](reference/finding-lifecycle.md)
+- [reference/audit-boundaries.md](reference/audit-boundaries.md)
+- [reference/run-protocol.md](reference/run-protocol.md)
 - [reference/scoring-rubric.md](reference/scoring-rubric.md) when scoring applies
 
 When findings are persisted, baseline-compared, or exported, also use:
@@ -89,6 +92,7 @@ When findings are persisted, baseline-compared, or exported, also use:
 - [reference/baseline-protocol.md](reference/baseline-protocol.md)
 - [reference/remediation-protocol.md](reference/remediation-protocol.md)
 - [reference/export-formats.md](reference/export-formats.md)
+- [reference/versioning.md](reference/versioning.md)
 
 ## Self-contained rule
 

@@ -17,16 +17,21 @@ def main() -> int:
     args = parser.parse_args()
     root = os.path.abspath(args.repo_root)
     base_dir = os.path.join(root, ".audit", "baselines", args.audit_type)
+    approved = os.path.join(base_dir, "approved.json")
     current = os.path.join(base_dir, "current.json")
-    if os.path.exists(current):
-        json.dump(load(current), sys.stdout, indent=2, sort_keys=True)
-        sys.stdout.write("\n")
-        return 0
     history_dir = os.path.join(base_dir, "history")
+
+    for candidate in (approved, current):
+        if os.path.exists(candidate):
+            json.dump(load(candidate), sys.stdout, indent=2, sort_keys=True)
+            sys.stdout.write("\n")
+            return 0
+
     if not os.path.isdir(history_dir):
         json.dump({"found": False, "reason": "no baseline"}, sys.stdout, indent=2)
         sys.stdout.write("\n")
         return 1
+
     candidates = sorted(
         os.path.join(history_dir, name)
         for name in os.listdir(history_dir)

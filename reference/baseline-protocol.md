@@ -10,6 +10,9 @@ Baselines make successive audits comparable.
 - persistence mode
 - finding fingerprints and statuses
 - timestamp
+- version fields
+- content hash
+- approved flag when explicitly promoted
 
 ## Storage layout
 
@@ -30,5 +33,5 @@ Use the bundled scripts:
 - Baselines may be produced in memory in `read-only` mode, but are only
   written in `persist` mode.
 - `diff` and `verify` should prefer normalized findings with fingerprints.
-- The current baseline should represent the latest approved snapshot for
-  the target scope; history preserves prior runs for comparison.
+- The current baseline should represent the latest snapshot for the target
+  scope; `approved.json` stores the last explicitly promoted baseline.

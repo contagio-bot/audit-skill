@@ -7,6 +7,13 @@ Validate the report with:
 
 - `scripts/validate_output_contract.py`
 
+The report should include version fields:
+
+- `schema_version`
+- `framework_version`
+- `methodology_version`
+- `fingerprint_version`
+
 ## Required sections
 
 1. **Executive summary**
