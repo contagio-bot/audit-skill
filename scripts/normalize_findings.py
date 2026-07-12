@@ -37,6 +37,8 @@ def main() -> int:
     out = []
     for idx, item in enumerate(findings, start=1):
         item.setdefault("id", f"F-{idx:03d}")
+        item.setdefault("audit_type", data.get("audit_type", "unknown") if isinstance(data, dict) else "unknown")
+        item.setdefault("priority", "P3")
         item.setdefault("classification", "Not verifiable")
         if item["classification"] not in VALID_CLASSIFICATIONS:
             raise SystemExit(f"invalid classification for {item['id']}")

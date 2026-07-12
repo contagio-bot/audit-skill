@@ -31,27 +31,27 @@
   },
   "supply-chain": {
     "category": "risk",
-    "reference": "reference/supply-chain.md",
+    "reference": null,
     "methodology": "methodologies/supply-chain/SKILL.md"
   },
   "ci": {
     "category": "risk",
-    "reference": "reference/ci.md",
+    "reference": null,
     "methodology": "methodologies/ci/SKILL.md"
   },
   "testing": {
     "category": "quality",
-    "reference": "reference/testing.md",
+    "reference": null,
     "methodology": "methodologies/testing/SKILL.md"
   },
   "data": {
     "category": "risk",
-    "reference": "reference/data.md",
+    "reference": null,
     "methodology": "methodologies/data/SKILL.md"
   },
   "api": {
     "category": "risk",
-    "reference": "reference/api.md",
+    "reference": null,
     "methodology": "methodologies/api/SKILL.md"
   },
   "cloud": {
@@ -61,22 +61,22 @@
   },
   "operability": {
     "category": "risk",
-    "reference": "reference/operability.md",
+    "reference": null,
     "methodology": "methodologies/operability/SKILL.md"
   },
   "privacy": {
     "category": "risk",
-    "reference": "reference/privacy.md",
+    "reference": null,
     "methodology": "methodologies/privacy/SKILL.md"
   },
   "ai": {
     "category": "risk",
-    "reference": "reference/ai.md",
+    "reference": null,
     "methodology": "methodologies/ai/SKILL.md"
   },
   "licensing": {
     "category": "risk",
-    "reference": "reference/licensing.md",
+    "reference": null,
     "methodology": "methodologies/licensing/SKILL.md"
   },
   "dd": {
@@ -115,7 +115,7 @@
     "methodology": null
   },
   "recheck": {
-    "category": "context",
+    "category": "continuity",
     "reference": "reference/recheck.md",
     "methodology": null
   },

@@ -1,59 +1,114 @@
 #!/usr/bin/env python3
-"""Resolve an `audit` command name to the bundled files it should load.
+"""Resolve an `audit` command name to the full loading plan it needs.
 
-Keeps the command -> reference/methodology mapping in one place
-(config/audits.json) instead of duplicated across SKILL.md prose.
+Keeps the command -> reference/methodology mapping, and the
+standard-vs-formal loading decision, in one place (config/audits.json,
+config/modes.json) instead of duplicated across SKILL.md prose.
 """
+import argparse
 import json
 import os
 import sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MANIFEST_PATH = os.path.join(REPO, "config", "audits.json")
+MODES_PATH = os.path.join(REPO, "config", "modes.json")
 
-ALWAYS_LOAD = [
-    "reference/bootstrap.md",
-    "reference/persistence-protocol.md",
+CATEGORY_LABELS = [
+    ("quality", "Quality"),
+    ("risk", "Risk"),
+    ("continuity", "Continuity"),
+    ("remediation", "Remediation"),
+    ("context", "Context"),
+    ("profiles", "Profiles"),
 ]
 
-REPORT_COMMANDS_LOAD_FINDING_CONTRACT = {
-    "deadcode", "arch", "perf", "security", "pentest", "deps",
-    "supply-chain", "ci", "testing", "data", "api", "cloud",
-    "operability", "privacy", "ai", "licensing", "dd",
-}
+# Compare fingerprints or compose other audits -> always the normalized/formal shape.
+ALWAYS_FORMAL_COMMANDS = {"baseline", "diff", "verify", "recheck", "dd"}
+
+# Exist specifically to write their own artifact -> persist by design.
+ALWAYS_PERSIST_COMMANDS = {"context", "baseline", "--profile"}
 
 
-def load_manifest() -> dict:
-    with open(MANIFEST_PATH, encoding="utf-8") as fh:
+def load_json(path: str) -> dict:
+    with open(path, encoding="utf-8") as fh:
         return json.load(fh)
 
 
-def resolve(command: str) -> dict:
-    manifest = load_manifest()
+def is_formal(command: str, formal: bool = False, fmt: str = "markdown") -> bool:
+    return bool(formal) or fmt != "markdown" or command in ALWAYS_FORMAL_COMMANDS
+
+
+def resolve(command: str, formal: bool = False, fmt: str = "markdown", persist: bool = False) -> dict:
+    manifest = load_json(MANIFEST_PATH)
     if command not in manifest:
         raise SystemExit(f"unknown audit command: {command}")
     entry = manifest[command]
-    to_load = list(ALWAYS_LOAD)
-    if command in REPORT_COMMANDS_LOAD_FINDING_CONTRACT:
-        to_load.append("reference/finding-contract.md")
-        to_load.append("reference/output-contract.md")
-    to_load.append(entry["reference"])
+    mode = "formal" if is_formal(command, formal, fmt) else "standard"
+    persist_needed = persist or command in ALWAYS_PERSIST_COMMANDS
+
+    to_load = ["reference/bootstrap-lite.md"]
+    if persist_needed:
+        to_load.append("reference/persistence-protocol.md")
+    if mode == "formal":
+        to_load += [
+            "reference/formal-delta.md",
+            "reference/finding-contract.md",
+            "reference/output-contract.md",
+        ]
+    if entry.get("reference"):
+        to_load.append(entry["reference"])
     if entry.get("methodology"):
         to_load.append(entry["methodology"])
+
     return {
         "command": command,
         "category": entry["category"],
+        "mode": mode,
         "load": to_load,
+        "scripts": ["scripts/detect_capabilities.py", "scripts/inventory.py"],
+        "validate": "formal-strict" if mode == "formal" else "standard",
     }
 
 
+def menu() -> str:
+    manifest = load_json(MANIFEST_PATH)
+    by_category: dict[str, list[str]] = {}
+    for command, entry in manifest.items():
+        by_category.setdefault(entry["category"], []).append(command)
+    lines = []
+    for key, label in CATEGORY_LABELS:
+        commands = by_category.get(key, [])
+        if commands:
+            lines.append(f"{label}: {', '.join(commands)}")
+    return "\n".join(lines)
+
+
 def main() -> int:
-    if len(sys.argv) < 2:
-        manifest = load_manifest()
+    raw = sys.argv[1:]
+    if "--menu" in raw:
+        sys.stdout.write(menu() + "\n")
+        return 0
+
+    # `--profile` is itself a command name, so it can't be parsed as a
+    # generic argparse flag mixed in with the real modifier flags.
+    command = "--profile" if "--profile" in raw else None
+    rest = [a for a in raw if a != "--profile"]
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("command", nargs="?")
+    parser.add_argument("--formal", action="store_true")
+    parser.add_argument("--format", default="markdown")
+    parser.add_argument("--persist", action="store_true")
+    args = parser.parse_args(rest)
+
+    command = command or args.command
+    if not command:
+        manifest = load_json(MANIFEST_PATH)
         json.dump(sorted(manifest.keys()), sys.stdout, indent=2)
         sys.stdout.write("\n")
         return 0
-    result = resolve(sys.argv[1])
+    result = resolve(command, formal=args.formal, fmt=args.format, persist=args.persist)
     json.dump(result, sys.stdout, indent=2)
     sys.stdout.write("\n")
     return 0

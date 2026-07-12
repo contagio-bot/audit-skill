@@ -1,0 +1,22 @@
+{
+  "_comment": "Cross-audit finding ownership. Used by scripts/compare_findings.py for dedup, not loaded into LLM context.",
+  "deadcode": "dead code, duplication, refactoring",
+  "arch": "architecture, design, code health",
+  "perf": "query/index/data-path performance",
+  "security": "cyber risk and infrastructure hardening",
+  "pentest": "static attack surface and live verification",
+  "deps": "runtime and dependency freshness",
+  "supply-chain": {
+    "owns": ["provenance", "dependency-integrity", "mutable-actions"],
+    "related": ["deps", "ci"]
+  },
+  "ci": "workflow integrity and release pipeline trust",
+  "testing": "test strategy and regression resistance",
+  "data": "data modeling and lifecycle",
+  "api": "APIs and webhooks",
+  "cloud": "cloud/IaC/container runtime",
+  "operability": "production operability",
+  "privacy": "technical privacy behavior",
+  "ai": "model/agent risk",
+  "licensing": "license and asset risk"
+}

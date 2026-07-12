@@ -1,0 +1,17 @@
+{
+  "standard": {
+    "normalized_findings": false,
+    "evidence_ledger": false,
+    "scoring": false,
+    "strict_validation": false,
+    "output_sections": 4
+  },
+  "formal": {
+    "normalized_findings": true,
+    "evidence_ledger": true,
+    "scoring": "conditional",
+    "strict_validation": true,
+    "version_fields": true,
+    "output_sections": 8
+  }
+}

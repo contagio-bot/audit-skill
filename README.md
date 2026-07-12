@@ -17,17 +17,21 @@ The skill now also includes:
   `scripts/resolve_command.py <command>`
 - `config/loading-budget.json`, a regression guard capping how many
   common references/methodology files each command may load
-- `reference/bootstrap.md` for capability detection, inventory, and
+- `reference/bootstrap-lite.md` for capability detection, inventory,
   explicit `full` / `partial` / `batched` / `risk-based` / `sample`
-  coverage disclosure
+  coverage disclosure, and the standard 4-section output shape — the only
+  common file every command loads
 - `reference/persistence-protocol.md` for `read-only` / default
-  (report written, repo otherwise untouched) / `--persist` behavior
-- `reference/finding-contract.md` for finding shape, evidence, lifecycle,
-  and cross-audit ownership
-- `reference/output-contract.md` for the `standard` (default, compact
-  4-section) vs `formal` (full 8-section, normalized) report shape —
-  `formal` always applies to `baseline`/`diff`/`verify`/`recheck`/`dd`
-  and to any non-markdown `--format`
+  (report written, repo otherwise untouched) / `--persist` behavior,
+  loaded only when a run persists beyond the report
+- `reference/formal-delta.md`, `reference/finding-contract.md`, and
+  `reference/output-contract.md` for the `formal` shape (normalized
+  findings, evidence ledger, full 8-section report) — loaded only when
+  the run is formal; `formal` always applies to
+  `baseline`/`diff`/`verify`/`recheck`/`dd` and to any non-markdown
+  `--format`
+- `config/audit-boundaries.json` for cross-audit finding ownership and
+  `config/modes.json` for standard/formal mode capability flags
 - `methodologies/dd/SKILL.md` runs its 10 phases sequentially, normalizing
   and scratching each phase's findings to `.audit/tmp/` (or in-memory in
   `--read-only` runs) instead of holding all phases in context at once

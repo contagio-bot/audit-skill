@@ -1,30 +1,12 @@
-# Audit output contract
+# Audit output contract (formal)
 
-Two output shapes. Pick `standard` unless one of the "always formal"
-triggers below applies. This choice is about output shape/rigor only —
-it's independent of [persistence-protocol.md](persistence-protocol.md),
-which governs writes.
+This is the `formal` shape. `standard` (the default) lives inline in
+[bootstrap-lite.md](bootstrap-lite.md) — read this file only when the run
+is formal (see [formal-delta.md](formal-delta.md) for the triggers). This
+choice is about output shape/rigor only — it's independent of
+[persistence-protocol.md](persistence-protocol.md), which governs writes.
 
 Validate with `scripts/validate_output_contract.py <path> [--mode standard|formal] [--strict]`.
-
-## `standard` (default)
-
-Four sections, still carrying every mandatory disclosure, just folded in
-rather than split into their own headings:
-
-1. **Summary** — 3-8 lines: top strengths, top concerns, top risks.
-2. **Coverage and limits** — requested/resolved scope, coverage mode,
-   excluded areas, confidence impact when not `full`; capability
-   manifest (available/unavailable tools, network/git/write status)
-   folded in as a sub-bullet; persistence disclosure (mode, writes
-   performed, writes skipped) folded in as a sub-bullet.
-3. **Findings** — severity-ordered, each substantive finding cites its
-   evidence inline (`file:line` or command output) and is classified
-   `Observed`, `Inferred`, or `Not verifiable`. No separate normalized
-   schema or evidence ledger required unless the run is otherwise
-   `formal`.
-4. **Recommended next actions** — prioritized, with acceptance criteria
-   when actionable work is proposed.
 
 ## `formal`
 

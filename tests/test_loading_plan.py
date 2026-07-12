@@ -1,7 +1,11 @@
 import json
+import sys
 import unittest
 
-from _helpers import REPO
+from _helpers import REPO, SCRIPTS
+
+sys.path.insert(0, str(SCRIPTS))
+from resolve_command import menu  # noqa: E402
 
 
 REPORT_COMMANDS = [
@@ -64,13 +68,16 @@ class LoadingPlanTests(unittest.TestCase):
         self.assertIn("one at a time", text)
 
     def test_no_argument_menu_is_grouped_by_category(self):
-        text = (REPO / "SKILL.md").read_text(encoding="utf-8")
-        after_heading = text.split("### No-argument menu", 1)[1]
-        menu_block = after_heading.split("```text", 1)[1].split("```", 1)[0]
+        menu_block = menu()
         for category in ("Quality:", "Risk:", "Continuity:", "Remediation:"):
             self.assertIn(category, menu_block)
         self.assertNotIn("--persist", menu_block)
         self.assertNotIn("--formal", menu_block)
+
+    def test_skill_md_delegates_menu_rendering_to_the_script(self):
+        text = (REPO / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("resolve_command.py --menu", text)
+        self.assertNotIn("```text\nQuality:", text)
 
 
 if __name__ == "__main__":

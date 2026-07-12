@@ -32,10 +32,12 @@ including Security, Dead code, Architecture, and Due diligence.
 
 Resolve coverage and persistence first:
 
-- follow `audit/reference/bootstrap.md`
-- follow `audit/reference/persistence-protocol.md`
-- follow `audit/reference/finding-contract.md`
-- follow `audit/reference/output-contract.md`
+- follow `audit/reference/bootstrap-lite.md`
+
+Load conditionally: follow `audit/reference/persistence-protocol.md` only
+for `--persist`/writes beyond the report; follow
+`audit/reference/finding-contract.md` + `audit/reference/formal-delta.md`
++ `audit/reference/output-contract.md` only when the run is formal.
 
 ## Phase 0 — deal context
 

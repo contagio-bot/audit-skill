@@ -22,10 +22,12 @@ section (create it if the file predates this command).
 
 Resolve the shared protocols first:
 
-- `reference/bootstrap.md`
-- `reference/persistence-protocol.md`
-- `reference/finding-contract.md`
-- `reference/output-contract.md`
+- `reference/bootstrap-lite.md`
+
+Load conditionally: `reference/persistence-protocol.md` only for
+`--persist`/writes beyond the report; `reference/finding-contract.md` +
+`reference/formal-delta.md` + `reference/output-contract.md` only when the
+run is formal.
 
 ## Scope check (ask, don't guess)
 
@@ -95,7 +97,8 @@ otherwise proceed:
 
 ## Output
 
-Follow `reference/output-contract.md`.
+Standard mode: per `bootstrap-lite.md`'s 4-section format. Formal mode:
+follow `reference/output-contract.md`.
 
 Area-specific addendum:
 

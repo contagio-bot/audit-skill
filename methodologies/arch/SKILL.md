@@ -19,11 +19,13 @@ Distinguish carefully between:
 
 Resolve the shared protocols first:
 
-- `audit/reference/bootstrap.md`
-- `audit/reference/persistence-protocol.md`
-- `audit/reference/finding-contract.md`
+- `audit/reference/bootstrap-lite.md`
 - `audit/reference/scoring-rubric.md`
-- `audit/reference/output-contract.md`
+
+Load conditionally: `audit/reference/persistence-protocol.md` only for
+`--persist`/writes beyond the report; `audit/reference/finding-contract.md`
++ `audit/reference/formal-delta.md` + `audit/reference/output-contract.md`
+only when the run is formal.
 
 ## Standing audit context
 
@@ -79,7 +81,7 @@ Use only actual repo paths.
 
 ## Output
 
-Follow `audit/reference/output-contract.md`.
+Standard mode: per `bootstrap-lite.md`'s 4-section format. Formal mode: follow `audit/reference/output-contract.md`.
 
 Area-specific addendum:
 
