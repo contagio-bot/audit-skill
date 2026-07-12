@@ -1,3 +1,5 @@
 profiles/personal-finance-app.md
 methodologies/deadcode/personal-finance-app.md
 methodologies/security/personal-finance-app.md
+__pycache__/
+*.pyc

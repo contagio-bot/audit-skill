@@ -6,7 +6,7 @@ Revalidate one finding and its immediate dependencies.
 
 Read and follow:
 
-- `reference/finding-schema.md`
+- `reference/finding-contract.md`
 - `reference/baseline-protocol.md`
 - `scripts/load_baseline.py`
 

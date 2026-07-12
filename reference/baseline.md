@@ -7,7 +7,7 @@ Create or refresh a baseline snapshot for later comparison.
 Read and follow:
 
 - `reference/baseline-protocol.md`
-- `reference/finding-schema.md`
+- `reference/finding-contract.md`
 - `reference/persistence-protocol.md`
 - `scripts/normalize_findings.py`
 - `scripts/save_baseline.py`

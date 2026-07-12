@@ -22,12 +22,9 @@ section (create it if the file predates this command).
 
 Resolve the shared protocols first:
 
-- `reference/capability-protocol.md`
-- `reference/inventory-protocol.md`
-- `reference/coverage-protocol.md`
+- `reference/bootstrap.md`
 - `reference/persistence-protocol.md`
-- `reference/evidence-protocol.md`
-- `reference/finding-schema.md`
+- `reference/finding-contract.md`
 - `reference/output-contract.md`
 
 ## Scope check (ask, don't guess)

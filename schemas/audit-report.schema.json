@@ -16,7 +16,7 @@
     "coverage": {
       "enum": ["full", "partial", "batched", "risk-based", "sample"]
     },
-    "persistence_mode": {"enum": ["read-only", "persist"]},
+    "persistence_mode": {"enum": ["read-only", "default", "persist"]},
     "findings": {"type": "array", "items": {"$ref": "finding.schema.json"}}
   }
 }

@@ -1,8 +1,8 @@
 # Audit context protocol
 
-Shared by every skill in the `audit` family. One file, created only in
-`persist` mode and read at the start of every run if present. It tracks
-two independent things:
+Shared by every skill in the `audit` family. One file, created only with
+`--persist` (or when the command is itself `context`) and read at the
+start of every run if present. It tracks two independent things:
 
 - **Accepted risks / intentional decisions** — updated at the end when
   the user accepts a finding as intentional, so it doesn't get re-flagged
@@ -24,16 +24,17 @@ these locations for the same repo.
 1. Resolve persistence mode first using
    `reference/persistence-protocol.md`.
 2. Look for the file.
-3. If absent and the run is `read-only`, proceed without creating it.
-   Mention once that no standing context file exists and no file was
-   created because the run is read-only.
-4. If absent and the run is `persist`, ask whether to initialize it now.
-   Do not auto-create it silently. If the user declines, proceed without
-   it.
+3. If absent and the run is `--read-only` or the (report-only) default,
+   proceed without creating it. Mention once that no standing context
+   file exists and no file was created because the run isn't
+   `--persist`ing beyond the report.
+4. If absent and the run is `--persist`, ask whether to initialize it
+   now. Do not auto-create it silently. If the user declines, proceed
+   without it.
 5. If present, read it in full before running any tooling. If it predates
    this protocol version and has no **Audit plan** section, add one (same
-   population rule as above) only in `persist` mode and only after telling
-   the user what will be added. In `read-only`, note the missing section
+   population rule as above) only with `--persist` and only after telling
+   the user what will be added. Otherwise, note the missing section
    instead of patching it.
 6. While producing findings, before reporting one, check whether it
    matches an entry under **Accepted risks / intentional decisions**.
@@ -67,7 +68,7 @@ Never write to this file silently. Only append an entry when:
 - you've asked "should I record this in `AUDIT-CONTEXT.md` so future audits
   don't flag it again?" and they said yes.
 
-If the file doesn't exist yet, create it first only in `persist` mode and
+If the file doesn't exist yet, create it first only with `--persist` and
 only after the user approves initialization. Otherwise append under the
 matching section (create the section if missing).
 

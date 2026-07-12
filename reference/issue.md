@@ -7,7 +7,7 @@ Generate an issue-ready brief for a selected finding.
 Read and follow:
 
 - `reference/remediation-protocol.md`
-- `reference/finding-schema.md`
+- `reference/finding-contract.md`
 
 ## Output
 

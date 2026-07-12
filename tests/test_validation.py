@@ -17,6 +17,23 @@ class ValidationTests(unittest.TestCase):
         proc = run_script_file("validate_output_contract.py", FIXTURES / "report-good.json")
         self.assertIn('"valid": true', proc.stdout.lower())
 
+    def test_good_standard_markdown_passes_in_standard_mode(self):
+        proc = run_script_file(
+            "validate_output_contract.py",
+            FIXTURES / "report-good-standard.md",
+            args=["--mode", "standard"],
+        )
+        self.assertIn('"valid": true', proc.stdout.lower())
+
+    def test_good_standard_markdown_fails_in_formal_mode(self):
+        proc = run_script_file(
+            "validate_output_contract.py",
+            FIXTURES / "report-good-standard.md",
+            check=False,
+        )
+        self.assertNotEqual(proc.returncode, 0)
+        self.assertIn("missing heading", proc.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

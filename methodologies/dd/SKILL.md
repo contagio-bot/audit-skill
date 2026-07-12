@@ -32,12 +32,9 @@ including Security, Dead code, Architecture, and Due diligence.
 
 Resolve coverage and persistence first:
 
-- follow `audit/reference/capability-protocol.md`
-- follow `audit/reference/inventory-protocol.md`
-- follow `audit/reference/coverage-protocol.md`
+- follow `audit/reference/bootstrap.md`
 - follow `audit/reference/persistence-protocol.md`
-- follow `audit/reference/evidence-protocol.md`
-- follow `audit/reference/finding-schema.md`
+- follow `audit/reference/finding-contract.md`
 - follow `audit/reference/output-contract.md`
 
 ## Phase 0 — deal context
@@ -52,7 +49,7 @@ report:
 If the user explicitly asked for a generic DD without questions, proceed
 with a general technical assessment.
 
-## Workflow
+## Workflow (sequential, one phase in context at a time)
 
 Read and follow:
 
@@ -61,7 +58,7 @@ Read and follow:
 - `references/fintech-rules-checklist.md` when the target repo has
   matching fintech-style conventions or a dedicated profile says to use it
 
-Mandatory structure:
+Mandatory structure — the 10 phases in `investigation-protocol.md`:
 
 1. Reconnaissance
 2. Architecture & domain
@@ -74,14 +71,37 @@ Mandatory structure:
 9. Team & process inference
 10. Final report using the bundled output template
 
-The final report must still satisfy `audit/reference/output-contract.md`;
-the DD template is the due-diligence-specific addendum on top of the
-shared contract, not a replacement for it.
+Run phases 1-9 one at a time rather than holding all of them in context
+together:
+
+1. Execute the phase's checklist against the repo.
+2. Normalize that phase's findings (`scripts/normalize_findings.py`).
+3. If the run is `--persist` or default (not `--read-only`), write the
+   normalized result to a scratch file at
+   `.audit/tmp/dd-<phase-number>-<phase-name>.json` and drop the phase's
+   raw exploration output from working context — the next phase only
+   needs the normalized findings, not how you got there. In `--read-only`
+   runs, keep the same normalized result in working memory instead of
+   writing it (no writes at all in that mode).
+4. Move to the next phase.
+
+After phase 9: read back the phase scratch files (or in-memory
+equivalents), deduplicate by fingerprint per
+`audit/reference/finding-contract.md`, and aggregate into the phase-10
+final report using the bundled output template. Delete
+`.audit/tmp/dd-*.json` scratch files once the final report is produced —
+they are working state, not an audit deliverable.
+
+The final report must still satisfy `audit/reference/output-contract.md`
+in `formal` mode (due diligence is always `formal`, see that file); the
+DD template is the due-diligence-specific addendum on top of the shared
+contract, not a replacement for it.
 
 ## Notes
 
 - `dd` is composite: do not also separately run `arch`, `security`, and
   `deadcode` for the same target unless the user explicitly wants the
   extra pass.
-- Save a report file only if the user asks for one or the context is a
-  formal DD deliverable.
+- Report-file writing follows the standard default in
+  `audit/reference/persistence-protocol.md`: write the report unless
+  `--read-only` applies.

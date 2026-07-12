@@ -20,12 +20,9 @@ re-flagged" instead of reported as new.
 
 Resolve coverage and persistence first:
 
-- follow `audit/reference/capability-protocol.md`
-- follow `audit/reference/inventory-protocol.md`
-- follow `audit/reference/coverage-protocol.md`
+- follow `audit/reference/bootstrap.md`
 - follow `audit/reference/persistence-protocol.md`
-- follow `audit/reference/evidence-protocol.md`
-- follow `audit/reference/finding-schema.md`
+- follow `audit/reference/finding-contract.md`
 - follow `audit/reference/output-contract.md`
 
 ## Step 0 — detect stack

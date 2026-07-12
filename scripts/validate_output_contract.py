@@ -7,7 +7,7 @@ import sys
 from typing import Any
 
 
-COMMON_MARKDOWN_HEADINGS = [
+FORMAL_MARKDOWN_HEADINGS = [
     "Executive summary",
     "Scope and coverage",
     "Capability manifest",
@@ -18,8 +18,15 @@ COMMON_MARKDOWN_HEADINGS = [
     "Persistence disclosure",
 ]
 
+STANDARD_MARKDOWN_HEADINGS = [
+    "Summary",
+    "Coverage and limits",
+    "Findings",
+    "Recommended next actions",
+]
+
 ALLOWED_COVERAGE = {"full", "partial", "batched", "risk-based", "sample"}
-ALLOWED_PERSISTENCE = {"read-only", "persist"}
+ALLOWED_PERSISTENCE = {"read-only", "default", "persist"}
 ALLOWED_CLASSIFICATIONS = {"Observed", "Inferred", "Not verifiable"}
 ALLOWED_STATUSES = {
     "new",
@@ -38,9 +45,10 @@ ALLOWED_CONFIDENCE = {"high", "medium", "low", "n/a"}
 ALLOWED_PRIORITY = {"P0", "P1", "P2", "P3", "P4"}
 
 
-def validate_markdown(text: str, strict: bool = False):
+def validate_markdown(text: str, strict: bool = False, mode: str = "formal"):
     errors = []
-    for heading in COMMON_MARKDOWN_HEADINGS:
+    headings = STANDARD_MARKDOWN_HEADINGS if mode == "standard" else FORMAL_MARKDOWN_HEADINGS
+    for heading in headings:
         if f"## {heading}" not in text and f"### {heading}" not in text:
             errors.append(f"missing heading: {heading}")
     if strict:
@@ -178,6 +186,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("path")
     parser.add_argument("--strict", action="store_true")
+    parser.add_argument("--mode", choices=["standard", "formal"], default="formal")
     args = parser.parse_args()
     path = args.path
     if not os.path.exists(path):
@@ -186,7 +195,7 @@ def main() -> int:
     if path.endswith(".json"):
         errors = validate_json(json.loads(load_text(path)), strict=args.strict)
     else:
-        errors = validate_markdown(load_text(path), strict=args.strict)
+        errors = validate_markdown(load_text(path), strict=args.strict, mode=args.mode)
     if errors:
         json.dump({"valid": False, "errors": errors}, sys.stdout, indent=2)
         sys.stdout.write("\n")

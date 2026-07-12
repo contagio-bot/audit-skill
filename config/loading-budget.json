@@ -1,0 +1,13 @@
+{
+  "_comment": "Regression guard against accidental context bloat. 'common' = reference/bootstrap.md, persistence-protocol.md, finding-contract.md, output-contract.md — loaded for every substantive report-producing command. Checked by tests/test_reference_budget.py.",
+  "default": {
+    "max_common_references": 4,
+    "max_methodology_files": 1
+  },
+  "dd": {
+    "max_common_references": 4,
+    "max_methodology_files": 1,
+    "sequential": true,
+    "max_active_methodologies": 1
+  }
+}

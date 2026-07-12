@@ -8,12 +8,9 @@ license: MIT
 
 Resolve the shared protocols first:
 
-- `audit/reference/capability-protocol.md`
-- `audit/reference/inventory-protocol.md`
-- `audit/reference/coverage-protocol.md`
+- `audit/reference/bootstrap.md`
 - `audit/reference/persistence-protocol.md`
-- `audit/reference/evidence-protocol.md`
-- `audit/reference/finding-schema.md`
+- `audit/reference/finding-contract.md`
 - `audit/reference/output-contract.md`
 
 Then inspect:

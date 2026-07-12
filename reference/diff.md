@@ -7,7 +7,7 @@ Compare findings across two revisions using fingerprints.
 Read and follow:
 
 - `reference/baseline-protocol.md`
-- `reference/finding-schema.md`
+- `reference/finding-contract.md`
 - `scripts/load_baseline.py`
 - `scripts/compare_findings.py`
 

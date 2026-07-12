@@ -30,8 +30,9 @@ Use the bundled scripts:
 ## Rules
 
 - Do not mutate accepted risks automatically while creating a baseline.
-- Baselines may be produced in memory in `read-only` mode, but are only
-  written in `persist` mode.
+- Baselines may be produced in memory without `--persist`, but are only
+  written to disk with `--persist` (or when the command is itself
+  `baseline`).
 - `diff` and `verify` should prefer normalized findings with fingerprints.
 - The current baseline should represent the latest snapshot for the target
   scope; `approved.json` stores the last explicitly promoted baseline.

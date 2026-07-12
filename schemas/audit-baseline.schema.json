@@ -29,7 +29,7 @@
     "coverage": {
       "enum": ["full", "partial", "batched", "risk-based", "sample"]
     },
-    "persistence_mode": {"enum": ["read-only", "persist"]},
+    "persistence_mode": {"enum": ["read-only", "default", "persist"]},
     "timestamp": {"type": "string"},
     "findings": {"type": "array"},
     "evidence": {"type": "array"},

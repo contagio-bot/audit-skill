@@ -1,7 +1,7 @@
 ---
 name: audit
 description: "Router for repository audits, baselines, diffs, verification, and remediation planning. Delegates only to bundled methodologies, references, schemas, and local stdlib scripts. Supports explicit coverage, persistence, capability, evidence, and export protocols without external skill dependencies."
-argument-hint: "[deadcode|arch|perf|security|pentest|deps|supply-chain|ci|testing|data|api|cloud|operability|privacy|ai|licensing|dd|baseline|diff|verify|fix-plan|issue|context|recheck|--profile] [target] [--read-only|--persist] [--full|--partial|--batched|--risk-based|--sample] [--format markdown|json|csv|sarif|github-issues]"
+argument-hint: "[deadcode|arch|perf|security|pentest|deps|supply-chain|ci|testing|data|api|cloud|operability|privacy|ai|licensing|dd|baseline|diff|verify|fix-plan|issue|context|recheck|--profile] [target] [--read-only|--persist] [--full|--partial|--batched|--risk-based|--sample] [--standard|--formal] [--format markdown|json|csv|sarif|github-issues]"
 user-invocable: true
 license: MIT
 ---
@@ -22,6 +22,13 @@ It must not inline specialist audit logic.
 local file and any references it names before running that command.
 
 ## Commands
+
+The canonical command → category/reference/methodology mapping lives in
+[config/audits.json](config/audits.json), resolvable deterministically
+with `scripts/resolve_command.py <command>` (prints exactly which files
+to load for that command — prefer it over re-deriving the mapping from
+this table). The table below is the human-readable view of the same
+manifest; keep them in sync.
 
 | Command | Category | Description | Reference |
 |---|---|---|---|
@@ -55,44 +62,61 @@ local file and any references it names before running that command.
 
 ## Optional modifiers
 
-- `--read-only`: never create or modify files in the target repo
-- `--persist`: allow writing context/baseline/report artifacts when the delegated workflow calls for them
+- `--read-only`: never create or modify files in the target repo, not even the report (chat-only output)
+- `--persist`: in addition to the default report write, also allow writing context/baseline artifacts when the delegated workflow calls for them (see [reference/persistence-protocol.md](reference/persistence-protocol.md); default with no flag is: write the report, stay read-only otherwise)
 - `--full`: intended exhaustive pass over the in-scope target
 - `--partial`: bounded subset only
 - `--batched`: exhaustive-by-area across batches/services
 - `--risk-based`: prioritize highest-risk surfaces first
 - `--sample`: representative sampling only
-- `--format markdown|json|csv|sarif|github-issues`: choose an output format per [reference/export-formats.md](reference/export-formats.md)
+- `--standard` (default): compact 4-section report — see [reference/output-contract.md](reference/output-contract.md)
+- `--formal`: full 8-section normalized report; always applied regardless of this flag for `baseline`/`diff`/`verify`/`recheck`/`dd`, or when `--format` is not markdown
+- `--format markdown|json|csv|sarif|github-issues`: choose an output format per [reference/export-formats.md](reference/export-formats.md) (any non-markdown format implies `--formal`)
 
 ## Routing rules
 
-1. No argument: render the command menu and ask what the user wants.
+1. No argument: render the command menu (below) and ask what the user
+   wants.
 2. `--profile`: load [reference/profile.md](reference/profile.md).
 3. Known command: load its reference file and follow it exactly.
 4. Natural-language request: map it only when intent is materially clear.
 5. If ambiguity would change the outcome, ask instead of guessing.
 
+### No-argument menu
+
+Render commands grouped by category, not the full table, and don't dump
+the modifier list up front — only mention `--read-only` exists, and
+surface the rest (`--persist`, coverage flags, `--formal`, `--format`)
+only if the user asks or their answer needs one:
+
+```text
+Quality: deadcode, arch, perf, testing
+Risk: security, pentest, deps, supply-chain, ci, data, api, cloud,
+      operability, privacy, ai, licensing, dd
+Continuity: baseline, diff, verify, recheck
+Remediation: fix-plan, issue
+Context: context
+Profiles: --profile
+```
+
 ## Shared protocols
 
 Every substantive run must resolve and apply:
 
-- [reference/capability-protocol.md](reference/capability-protocol.md)
-- [reference/inventory-protocol.md](reference/inventory-protocol.md)
-- [reference/coverage-protocol.md](reference/coverage-protocol.md)
-- [reference/persistence-protocol.md](reference/persistence-protocol.md)
-- [reference/evidence-protocol.md](reference/evidence-protocol.md)
-- [reference/finding-schema.md](reference/finding-schema.md)
-- [reference/finding-lifecycle.md](reference/finding-lifecycle.md)
-- [reference/audit-boundaries.md](reference/audit-boundaries.md)
-- [reference/run-protocol.md](reference/run-protocol.md)
-- [reference/scoring-rubric.md](reference/scoring-rubric.md) when scoring applies
+- [reference/bootstrap.md](reference/bootstrap.md) — capability
+  detection, inventory, coverage, and run order
+- [reference/persistence-protocol.md](reference/persistence-protocol.md) — what gets written
+- [reference/finding-contract.md](reference/finding-contract.md) — finding
+  shape, evidence, lifecycle, and cross-audit ownership
+- [reference/output-contract.md](reference/output-contract.md) — `standard`
+  (default, 4 sections) vs `formal` (8 sections) report shape
 
-When findings are persisted, baseline-compared, or exported, also use:
+Load these only when the command actually needs them, not on every run:
 
-- [reference/baseline-protocol.md](reference/baseline-protocol.md)
-- [reference/remediation-protocol.md](reference/remediation-protocol.md)
-- [reference/export-formats.md](reference/export-formats.md)
-- [reference/versioning.md](reference/versioning.md)
+- [reference/scoring-rubric.md](reference/scoring-rubric.md) — only when scoring applies
+- [reference/baseline-protocol.md](reference/baseline-protocol.md) — only for `baseline`, `diff`, `verify`, `recheck`, or `--persist` with historical comparison
+- [reference/remediation-protocol.md](reference/remediation-protocol.md) — only for `fix-plan`/`issue`
+- [reference/export-formats.md](reference/export-formats.md) and [reference/versioning.md](reference/versioning.md) — only when `--format` is not the default markdown
 
 ## Self-contained rule
 
@@ -114,13 +138,15 @@ file is missing.
 If `AUDIT-CONTEXT.md` exists, delegated methodologies must read it per
 [reference/context-protocol.md](reference/context-protocol.md). This file
 records standing facts, accepted risks, audit plan state, and open
-follow-ups. In `read-only` mode it may be read but must not be modified.
+follow-ups. It may always be read, but is only created or modified with
+`--persist` (or when the command is itself `context`).
 
 ## Adding a new area
 
 To add another audit area later:
 
-1. add one router row above
+1. add one entry to [config/audits.json](config/audits.json) and one
+   router row above (keep them in sync)
 2. add one `reference/<name>.md`
 3. add one bundled methodology under `methodologies/`
 4. update tests, schemas, and protocols if the new area changes shared behavior

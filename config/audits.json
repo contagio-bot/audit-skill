@@ -1,0 +1,127 @@
+{
+  "deadcode": {
+    "category": "quality",
+    "reference": "reference/deadcode.md",
+    "methodology": "methodologies/deadcode/generic.md"
+  },
+  "arch": {
+    "category": "quality",
+    "reference": "reference/arch.md",
+    "methodology": "methodologies/arch/SKILL.md"
+  },
+  "perf": {
+    "category": "quality",
+    "reference": "reference/perf.md",
+    "methodology": null
+  },
+  "security": {
+    "category": "risk",
+    "reference": "reference/security.md",
+    "methodology": "methodologies/security/generic.md"
+  },
+  "pentest": {
+    "category": "risk",
+    "reference": "reference/pentest.md",
+    "methodology": "methodologies/pentest/SKILL.md"
+  },
+  "deps": {
+    "category": "risk",
+    "reference": "reference/deps.md",
+    "methodology": "methodologies/deps/SKILL.md"
+  },
+  "supply-chain": {
+    "category": "risk",
+    "reference": "reference/supply-chain.md",
+    "methodology": "methodologies/supply-chain/SKILL.md"
+  },
+  "ci": {
+    "category": "risk",
+    "reference": "reference/ci.md",
+    "methodology": "methodologies/ci/SKILL.md"
+  },
+  "testing": {
+    "category": "quality",
+    "reference": "reference/testing.md",
+    "methodology": "methodologies/testing/SKILL.md"
+  },
+  "data": {
+    "category": "risk",
+    "reference": "reference/data.md",
+    "methodology": "methodologies/data/SKILL.md"
+  },
+  "api": {
+    "category": "risk",
+    "reference": "reference/api.md",
+    "methodology": "methodologies/api/SKILL.md"
+  },
+  "cloud": {
+    "category": "risk",
+    "reference": "reference/cloud.md",
+    "methodology": "methodologies/cloud/SKILL.md"
+  },
+  "operability": {
+    "category": "risk",
+    "reference": "reference/operability.md",
+    "methodology": "methodologies/operability/SKILL.md"
+  },
+  "privacy": {
+    "category": "risk",
+    "reference": "reference/privacy.md",
+    "methodology": "methodologies/privacy/SKILL.md"
+  },
+  "ai": {
+    "category": "risk",
+    "reference": "reference/ai.md",
+    "methodology": "methodologies/ai/SKILL.md"
+  },
+  "licensing": {
+    "category": "risk",
+    "reference": "reference/licensing.md",
+    "methodology": "methodologies/licensing/SKILL.md"
+  },
+  "dd": {
+    "category": "risk",
+    "reference": "reference/dd.md",
+    "methodology": "methodologies/dd/SKILL.md"
+  },
+  "baseline": {
+    "category": "continuity",
+    "reference": "reference/baseline.md",
+    "methodology": null
+  },
+  "diff": {
+    "category": "continuity",
+    "reference": "reference/diff.md",
+    "methodology": null
+  },
+  "verify": {
+    "category": "continuity",
+    "reference": "reference/verify.md",
+    "methodology": null
+  },
+  "fix-plan": {
+    "category": "remediation",
+    "reference": "reference/fix-plan.md",
+    "methodology": null
+  },
+  "issue": {
+    "category": "remediation",
+    "reference": "reference/issue.md",
+    "methodology": null
+  },
+  "context": {
+    "category": "context",
+    "reference": "reference/context.md",
+    "methodology": null
+  },
+  "recheck": {
+    "category": "context",
+    "reference": "reference/recheck.md",
+    "methodology": null
+  },
+  "--profile": {
+    "category": "profiles",
+    "reference": "reference/profile.md",
+    "methodology": null
+  }
+}

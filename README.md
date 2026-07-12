@@ -12,15 +12,31 @@ self-contained: no external skill paths are required for `deadcode`,
 
 The skill now also includes:
 
-- `reference/coverage-protocol.md` for explicit `full` / `partial` /
-  `batched` / `risk-based` / `sample` coverage disclosure
-- `reference/persistence-protocol.md` for `read-only` vs `persist` behavior
-- `reference/capability-protocol.md`, `reference/inventory-protocol.md`,
-  `reference/evidence-protocol.md`, `reference/finding-schema.md`, and
-  `reference/output-contract.md` for shared audit mechanics
+- `config/audits.json`, the single source of truth for command →
+  category/reference/methodology, resolvable deterministically with
+  `scripts/resolve_command.py <command>`
+- `config/loading-budget.json`, a regression guard capping how many
+  common references/methodology files each command may load
+- `reference/bootstrap.md` for capability detection, inventory, and
+  explicit `full` / `partial` / `batched` / `risk-based` / `sample`
+  coverage disclosure
+- `reference/persistence-protocol.md` for `read-only` / default
+  (report written, repo otherwise untouched) / `--persist` behavior
+- `reference/finding-contract.md` for finding shape, evidence, lifecycle,
+  and cross-audit ownership
+- `reference/output-contract.md` for the `standard` (default, compact
+  4-section) vs `formal` (full 8-section, normalized) report shape —
+  `formal` always applies to `baseline`/`diff`/`verify`/`recheck`/`dd`
+  and to any non-markdown `--format`
+- `methodologies/dd/SKILL.md` runs its 10 phases sequentially, normalizing
+  and scratching each phase's findings to `.audit/tmp/` (or in-memory in
+  `--read-only` runs) instead of holding all phases in context at once
 - `scripts/` with bundled stdlib helpers for inventory, capability
-  detection, normalization, comparison, validation, SARIF export, and fix-plan building
+  detection, command resolution, normalization, comparison, validation
+  (`standard`/`formal` modes), SARIF export, and fix-plan building
 - `schemas/` for finding, context, and report shapes
 - `tests/behavior/` for scenario-based behavioral regression fixtures
 - `tests/fixtures/` and `tests/test_*.md` for routing, context,
   baseline/diff, and failure-mode checks
+- `tests/test_loading_plan.py` and `tests/test_reference_budget.py` for
+  automated regression checks on what each command loads
