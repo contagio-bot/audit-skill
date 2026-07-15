@@ -1,8 +1,8 @@
 {
   "_comment": "Regression guard against accidental context bloat. Checked by tests/test_reference_budget.py against scripts/resolve_command.py's loading plan, not by grepping prose.",
   "default": {
-    "max_files_standard": 3,
-    "max_files_formal": 6,
+    "max_files_standard": 4,
+    "max_files_formal": 7,
     "max_common_lines_standard": 60
   },
   "dd": {

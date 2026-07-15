@@ -5,7 +5,7 @@ import unittest
 from _helpers import REPO, SCRIPTS
 
 sys.path.insert(0, str(SCRIPTS))
-from resolve_command import resolve, ALWAYS_FORMAL_COMMANDS, ALWAYS_PERSIST_COMMANDS  # noqa: E402
+from resolve_command import resolve, ALWAYS_FORMAL_COMMANDS  # noqa: E402
 
 
 REPORT_COMMANDS = [
@@ -39,7 +39,7 @@ class ReferenceBudgetTests(unittest.TestCase):
             self.assertEqual(plan["mode"], "standard", command)
             for formal_only in ("reference/finding-contract.md", "reference/formal-delta.md", "reference/output-contract.md"):
                 self.assertNotIn(formal_only, plan["load"], command)
-            self.assertNotIn("reference/persistence-protocol.md", plan["load"], command)
+            self.assertIn("reference/persistence-protocol.md", plan["load"], command)
             self.assertLessEqual(len(plan["load"]), self.budget["max_files_standard"], command)
 
     def test_formal_mode_loads_the_formal_trio(self):
@@ -59,14 +59,11 @@ class ReferenceBudgetTests(unittest.TestCase):
         plan = resolve("security", fmt="json")
         self.assertEqual(plan["mode"], "formal")
 
-    def test_persistence_protocol_only_loaded_when_needed(self):
+    def test_persistence_protocol_always_loaded(self):
+        # persistence-protocol.md governs default (persist-by-default)
+        # behavior, so every command loads it.
         plan = resolve("security")
-        self.assertNotIn("reference/persistence-protocol.md", plan["load"])
-        plan = resolve("security", persist=True)
         self.assertIn("reference/persistence-protocol.md", plan["load"])
-        for command in ALWAYS_PERSIST_COMMANDS:
-            plan = resolve(command)
-            self.assertIn("reference/persistence-protocol.md", plan["load"], command)
 
     def test_common_standard_footprint_within_line_budget(self):
         bootstrap_lines = len((REPO / "reference/bootstrap-lite.md").read_text(encoding="utf-8").splitlines())

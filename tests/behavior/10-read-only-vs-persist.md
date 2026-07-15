@@ -1,24 +1,24 @@
-# Scenario: read-only vs default vs persist
+# Scenario: read-only vs default (persist)
 
 ## Input
 
-Three runs on the same repo:
+Two runs on the same repo:
 
 1. `audit security --read-only`
 2. `audit security` (default)
-3. `audit security --persist`
 
 ## Expected behavior
 
 - run 1 performs no writes at all, including no report file
-- run 2 writes only the report file (`docs/audit/<date>-security.md`);
-  `AUDIT-CONTEXT.md` and baseline files stay untouched even if they exist
-  and are read
-- run 3 may additionally initialize or update `AUDIT-CONTEXT.md` and
-  baseline files, only after disclosure and confirmation when judgment is
-  being recorded
+- run 2 writes the report file (`docs/audit/<date>-security.md`), and may
+  additionally initialize or update `AUDIT-CONTEXT.md` and baseline files
+  when the methodology calls for it, only after disclosure and
+  confirmation when judgment is being recorded
 
 ## Must not do
 
-- treat all three runs as behaviorally identical
-- write `AUDIT-CONTEXT.md` or a baseline file in run 2 without `--persist`
+- treat the two runs as behaviorally identical
+- skip disclosure/confirmation for context or baseline writes in run 2
+  just because persisting is now the default
+- silently downgrade run 2 to report-only without ever considering
+  context/baseline writes

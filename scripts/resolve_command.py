@@ -26,10 +26,6 @@ CATEGORY_LABELS = [
 # Compare fingerprints or compose other audits -> always the normalized/formal shape.
 ALWAYS_FORMAL_COMMANDS = {"baseline", "diff", "verify", "recheck", "dd"}
 
-# Exist specifically to write their own artifact -> persist by design.
-ALWAYS_PERSIST_COMMANDS = {"context", "baseline", "--profile"}
-
-
 def load_json(path: str) -> dict:
     with open(path, encoding="utf-8") as fh:
         return json.load(fh)
@@ -39,17 +35,17 @@ def is_formal(command: str, formal: bool = False, fmt: str = "markdown") -> bool
     return bool(formal) or fmt != "markdown" or command in ALWAYS_FORMAL_COMMANDS
 
 
-def resolve(command: str, formal: bool = False, fmt: str = "markdown", persist: bool = False) -> dict:
+def resolve(command: str, formal: bool = False, fmt: str = "markdown") -> dict:
     manifest = load_json(MANIFEST_PATH)
     if command not in manifest:
         raise SystemExit(f"unknown audit command: {command}")
     entry = manifest[command]
     mode = "formal" if is_formal(command, formal, fmt) else "standard"
-    persist_needed = persist or command in ALWAYS_PERSIST_COMMANDS
 
-    to_load = ["reference/bootstrap-lite.md"]
-    if persist_needed:
-        to_load.append("reference/persistence-protocol.md")
+    # persistence-protocol.md governs the default (persist) behavior for
+    # every report-producing command, not just an opt-in `--persist` run,
+    # so it is always loaded.
+    to_load = ["reference/bootstrap-lite.md", "reference/persistence-protocol.md"]
     if mode == "formal":
         to_load += [
             "reference/formal-delta.md",
@@ -99,7 +95,6 @@ def main() -> int:
     parser.add_argument("command", nargs="?")
     parser.add_argument("--formal", action="store_true")
     parser.add_argument("--format", default="markdown")
-    parser.add_argument("--persist", action="store_true")
     args = parser.parse_args(rest)
 
     command = command or args.command
@@ -108,7 +103,7 @@ def main() -> int:
         json.dump(sorted(manifest.keys()), sys.stdout, indent=2)
         sys.stdout.write("\n")
         return 0
-    result = resolve(command, formal=args.formal, fmt=args.format, persist=args.persist)
+    result = resolve(command, formal=args.formal, fmt=args.format)
     json.dump(result, sys.stdout, indent=2)
     sys.stdout.write("\n")
     return 0

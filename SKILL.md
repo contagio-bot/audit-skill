@@ -1,7 +1,7 @@
 ---
 name: audit
 description: "Router for repository audits, baselines, diffs, verification, and remediation planning. Delegates only to bundled methodologies, references, schemas, and local stdlib scripts. Supports explicit coverage, persistence, capability, evidence, and export protocols without external skill dependencies."
-argument-hint: "[command] [target] [--read-only|--persist] [--formal] [--format ...]"
+argument-hint: "[command] [target] [--read-only] [--formal] [--format ...]"
 user-invocable: true
 license: MIT
 ---
@@ -28,7 +28,7 @@ The canonical command → category/reference/methodology mapping lives in
 
 Resolve explicit commands with:
 
-`scripts/resolve_command.py <command> [--formal] [--format ...] [--persist]`
+`scripts/resolve_command.py <command> [--formal] [--format ...]`
 
 — it prints the full loading plan (mode, files, scripts, validation) for
 that command. For the no-argument menu, use:
@@ -39,7 +39,9 @@ that command. For the no-argument menu, use:
 
 ## Optional modifiers
 
-- `--read-only` / `--persist`: writes gate — default is report-only, see
+- `--read-only`: writes gate — default is persist (report, plus
+  context/baseline writes when the methodology calls for it); pass
+  `--read-only` to suppress all writes for that run, see
   [reference/persistence-protocol.md](reference/persistence-protocol.md)
 - `--full` / `--partial` / `--batched` / `--risk-based` / `--sample`:
   coverage mode — see [reference/bootstrap-lite.md](reference/bootstrap-lite.md)
@@ -64,16 +66,16 @@ that command. For the no-argument menu, use:
 
 Render `scripts/resolve_command.py --menu`'s output, grouped by category,
 not the full table. Don't dump the modifier list up front — only mention
-`--read-only` exists, and surface the rest (`--persist`, coverage flags,
-`--formal`, `--format`) only if the user asks or their answer needs one.
+`--read-only` exists, and surface the rest (coverage flags, `--formal`,
+`--format`) only if the user asks or their answer needs one.
 
 ## Shared protocols
 
 Every substantive run resolves [reference/bootstrap-lite.md](reference/bootstrap-lite.md)
+and [reference/persistence-protocol.md](reference/persistence-protocol.md)
 first (capability detection, inventory, coverage, persistence defaults,
 run order, standard 4-section output). `scripts/resolve_command.py
-<command>` decides what else to add: persistence-protocol.md when the run
-persists beyond the report; formal-delta.md + finding-contract.md +
+<command>` decides what else to add: formal-delta.md + finding-contract.md +
 output-contract.md when the run is `formal` (always true for
 `baseline`/`diff`/`verify`/`recheck`/`dd`, non-markdown `--format`, or
 `--formal`).
@@ -81,7 +83,7 @@ output-contract.md when the run is `formal` (always true for
 Load these only when the command actually needs them, not on every run:
 
 - [reference/scoring-rubric.md](reference/scoring-rubric.md) — only when scoring applies
-- [reference/baseline-protocol.md](reference/baseline-protocol.md) — only for `baseline`, `diff`, `verify`, `recheck`, or `--persist` with historical comparison
+- [reference/baseline-protocol.md](reference/baseline-protocol.md) — only for `baseline`, `diff`, `verify`, `recheck`, or a default run with historical comparison
 - [reference/remediation-protocol.md](reference/remediation-protocol.md) — only for `fix-plan`/`issue`
 - [reference/export-formats.md](reference/export-formats.md) and [reference/versioning.md](reference/versioning.md) — only when `--format` is not the default markdown
 
@@ -98,8 +100,9 @@ missing, stop and tell the user exactly which one.
 If `AUDIT-CONTEXT.md` exists, delegated methodologies must read it per
 [reference/context-protocol.md](reference/context-protocol.md). This file
 records standing facts, accepted risks, audit plan state, and open
-follow-ups. It may always be read, but is only created or modified with
-`--persist` (or when the command is itself `context`).
+follow-ups. It may always be read, and by default may also be created or
+modified (subject to per-write confirmation) — unless the run is
+`--read-only`, or the command is itself `context` which always persists.
 
 ## Adding a new area
 

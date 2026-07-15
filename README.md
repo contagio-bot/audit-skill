@@ -19,11 +19,11 @@ The skill now also includes:
   common references/methodology files each command may load
 - `reference/bootstrap-lite.md` for capability detection, inventory,
   explicit `full` / `partial` / `batched` / `risk-based` / `sample`
-  coverage disclosure, and the standard 4-section output shape — the only
-  common file every command loads
-- `reference/persistence-protocol.md` for `read-only` / default
-  (report written, repo otherwise untouched) / `--persist` behavior,
-  loaded only when a run persists beyond the report
+  coverage disclosure, and the standard 4-section output shape
+- `reference/persistence-protocol.md` for persist-by-default (report,
+  plus context/baseline writes when the methodology calls for it) vs
+  `--read-only` behavior — loaded by every command alongside
+  bootstrap-lite.md
 - `reference/formal-delta.md`, `reference/finding-contract.md`, and
   `reference/output-contract.md` for the `formal` shape (normalized
   findings, evidence ledger, full 8-section report) — loaded only when
