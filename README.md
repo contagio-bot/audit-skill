@@ -6,8 +6,8 @@ Delegates to bundled local methodologies and references for audit,
 comparison, remediation, and continuity workflows. The package is
 self-contained: no external skill paths are required for `deadcode`,
 `arch`, `perf`, `security`, `pentest`, `deps`, `supply-chain`, `ci`,
-`testing`, `data`, `api`, `cloud`, `operability`, `privacy`, `ai`,
-`licensing`, `dd`, `baseline`, `diff`, `verify`, `fix-plan`, `issue`,
+`testing`, `milestones`, `data`, `api`, `cloud`, `operability`, `privacy`,
+`ai`, `licensing`, `dd`, `baseline`, `diff`, `verify`, `fix-plan`, `issue`,
 `context`, `recheck`, and `--profile`.
 
 The skill now also includes:

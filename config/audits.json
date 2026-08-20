@@ -44,6 +44,11 @@
     "reference": null,
     "methodology": "methodologies/testing/SKILL.md"
   },
+  "milestones": {
+    "category": "quality",
+    "reference": null,
+    "methodology": "methodologies/milestones/SKILL.md"
+  },
   "data": {
     "category": "risk",
     "reference": null,

@@ -10,7 +10,7 @@ from resolve_command import resolve, ALWAYS_FORMAL_COMMANDS  # noqa: E402
 
 REPORT_COMMANDS = [
     "deadcode", "arch", "perf", "security", "pentest", "deps",
-    "supply-chain", "ci", "testing", "data", "api", "cloud",
+    "supply-chain", "ci", "testing", "milestones", "data", "api", "cloud",
     "operability", "privacy", "ai", "licensing",
 ]
 
