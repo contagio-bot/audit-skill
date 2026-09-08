@@ -10,7 +10,7 @@ artifact it exists to produce.
 
 The default mode for every report-producing command (`deadcode`, `arch`,
 `perf`, `security`, `pentest`, `deps`, `supply-chain`, `ci`, `testing`,
-`data`, `api`, `cloud`, `operability`, `privacy`, `ai`, `licensing`, `dd`)
+`data`, `api`, `cloud`, `operability`, `privacy`, `ai`, `mcp`, `licensing`, `dd`)
 is `--persist`-equivalent: write the report, and also create or update
 `AUDIT-CONTEXT.md` and baseline files under `.audit/baselines/` when the
 methodology calls for it. This does not bypass the per-write confirmation

@@ -79,6 +79,11 @@
     "reference": null,
     "methodology": "methodologies/ai/SKILL.md"
   },
+  "mcp": {
+    "category": "risk",
+    "reference": null,
+    "methodology": "methodologies/mcp/SKILL.md"
+  },
   "licensing": {
     "category": "risk",
     "reference": null,

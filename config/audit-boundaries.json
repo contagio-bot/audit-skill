@@ -18,5 +18,9 @@
   "operability": "production operability",
   "privacy": "technical privacy behavior",
   "ai": "model/agent risk",
+  "mcp": {
+    "owns": ["mcp-oauth-server", "mcp-dcr", "mcp-tool-scope", "mcp-transport-auth"],
+    "related": ["security", "api", "ai"]
+  },
   "licensing": "license and asset risk"
 }

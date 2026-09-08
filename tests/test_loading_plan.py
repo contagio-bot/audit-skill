@@ -11,7 +11,7 @@ from resolve_command import menu  # noqa: E402
 REPORT_COMMANDS = [
     "deadcode", "arch", "perf", "security", "pentest", "deps",
     "supply-chain", "ci", "testing", "data", "api", "cloud",
-    "operability", "privacy", "ai", "licensing",
+    "operability", "privacy", "ai", "mcp", "licensing",
 ]
 
 
