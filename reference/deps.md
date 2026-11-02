@@ -19,3 +19,5 @@ auto-detects ecosystems and adapts its tooling accordingly.
 - `arch`'s "Dependency & Runtime Currency" category is intentionally
   narrower (4-5 central components, one line in a 10-category review) —
   don't treat it as equivalent to `deps` if the user wants full coverage.
+- After remediation, run **`night-report`** to confirm the same checks used
+  on Magellano EC2 cron would pass (see [reference/night-report.md](reference/night-report.md)).

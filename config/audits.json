@@ -29,6 +29,11 @@
     "reference": "reference/deps.md",
     "methodology": "methodologies/deps/SKILL.md"
   },
+  "night-report": {
+    "category": "continuity",
+    "reference": "reference/night-report.md",
+    "methodology": "methodologies/night-report/SKILL.md"
+  },
   "supply-chain": {
     "category": "risk",
     "reference": null,

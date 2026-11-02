@@ -10,6 +10,11 @@
 - input: `audit security ./repo`
 - expected: load `reference/security.md`, then delegated local methodology
 
+## night-report
+
+- input: `audit night-report ./click2job`
+- expected: load `reference/night-report.md`, then `methodologies/night-report/SKILL.md`; run `scripts/nightly-audit/` if present with `AUDIT_MAIL_DRY=1`
+
 ## Unknown command
 
 - input: `audit frobnicate ./repo`
