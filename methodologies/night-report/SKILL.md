@@ -165,6 +165,7 @@ Exit codes from `run.sh`:
 | deps **OK** but last `audit deps` was bad | Likely remediated — suggest updating `AUDIT-CONTEXT.md` run-log |
 | deadcode **WARN** | Optional **`audit deadcode`** for human triage |
 | **ERROR** on Python deps | Fix Docker network / run on EC2; do not bump packages blindly |
+| Invoked inside **`audit dd`** | **Required in DD phase 5** — same run/evidence rules; do not skip because `dd` already scanned CVEs |
 
 ### 6. Output (standard audit shape)
 

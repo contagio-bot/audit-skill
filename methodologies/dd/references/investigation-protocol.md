@@ -68,6 +68,25 @@ Verifica solo i componenti centrali:
 
 Esegui anche uno scan CVE noto (`pip-audit` / `npm audit` o equivalente).
 
+**Night report (standard Magellano):** subito dopo l’analisi deps/CVE, esegui
+la pipeline operativa equivalente a **`audit night-report`**:
+
+1. Se esiste `scripts/nightly-audit/run.sh`, segui
+   `methodologies/night-report/SKILL.md` con **`AUDIT_MAIL_DRY=1`**
+   (mai invio SMTP in DD salvo richiesta esplicita).
+2. Registra nel finding set della fase: **overall** OK/WARN/FAIL/ERROR,
+   tabella da `checks.tsv`, exit code, path assoluto della run dir,
+   eventuali allowlist (`accepted-deps.json`) rilevanti.
+3. **FAIL/ERROR su deps** in night-report → almeno **Major** in DD
+   (allineato a CVE operativi); **WARN** → Minor o nota in accepted risk
+   se già in `AUDIT-CONTEXT.md`.
+4. Se **`scripts/nightly-audit/` assente** → finding **Minor**:
+   manca il monitoraggio notturno standard; raccomandare bootstrap da
+   repo Magellano (bridge-jtt / click2job / track-feed template).
+
+Il night-report **non sostituisce** i punti 1–6 e lo scan CVE della fase:
+valida che il checkout passerebbe i controlli cron EC2 (Docker + lockfile).
+
 ## Fase 6 — Performance & Scalability
 
 Checklist:

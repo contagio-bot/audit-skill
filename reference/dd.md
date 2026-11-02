@@ -24,3 +24,8 @@ profile.
   don't also separately run `audit arch` / `audit security` / `audit
   deadcode` before or after it for the same target; that duplicates work
   the local DD methodology already does internally.
+- **Night report is part of DD by default:** phase 5 runs
+  `scripts/nightly-audit/` (see [reference/night-report.md](night-report.md))
+  after the DD dependency/CVE pass. You do not need a separate
+  `audit night-report` invocation unless the user asked for night-report
+  alone; inside `dd`, it is mandatory in phase 5.

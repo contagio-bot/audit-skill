@@ -66,7 +66,7 @@ Mandatory structure — the 10 phases in `investigation-protocol.md`:
 2. Architecture & domain
 3. Data & database
 4. Security + one full-repo subagent
-5. Dependencies & runtime currency + CVE scan
+5. Dependencies & runtime currency + CVE scan + **night-report** (standard)
 6. Performance & scalability
 7. Tests & quality
 8. Build, deploy, ops
@@ -86,6 +86,12 @@ together:
    runs, keep the same normalized result in working memory instead of
    writing it (no writes at all in that mode).
 4. Move to the next phase.
+
+**Phase 5 must include night-report:** after the central-component and CVE
+pass, run `scripts/nightly-audit/` per
+`methodologies/night-report/SKILL.md` and attach evidence to phase-5
+findings. Do not defer night-report to phase 10 only as prose — execute it
+in phase 5.
 
 After phase 9: read back the phase scratch files (or in-memory
 equivalents), deduplicate by fingerprint per

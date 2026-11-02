@@ -33,6 +33,9 @@ Includi:
 - evidence tags
 - excluded areas
 - repository coverage
+- **Night report (standard):** overall status, `checks.tsv` (or equivalent
+  table), log directory path, whether `scripts/nightly-audit/` was present;
+  if absent, state the bootstrap recommendation
 
 ## 3. Detailed findings
 
