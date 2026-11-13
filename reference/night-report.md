@@ -16,6 +16,9 @@ local methodology.
   the **production-shaped** toolchain (Docker + `pip-audit` or
   `npm audit --package-lock-only` + allowlist) plus lightweight
   deadcode/dup signals.
+- Every pipeline must include `deps_image_trivy.sh` (container images:
+  DB, cache, app base OS) next to the library check — see methodology
+  § Mandatory checks.
 - Recommended order in a full hygiene pass:
   **`deps` → remediate → `night-report`** (confirm cron-equivalent green),
   or **`night-report` alone** for a fast CVE/deadcode smoke on a checkout.

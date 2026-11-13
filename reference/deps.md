@@ -14,6 +14,10 @@ auto-detects ecosystems and adapts its tooling accordingly.
 
 ## Notes
 
+- **Container images are in scope** (see methodology § Container images):
+  a run that only reads manifests/lockfiles on a Dockerized repo is a
+  partial run and must say so.
+
 - `dd` may reuse the same evidence categories, but `deps` remains the
   dedicated narrower pass for dependency/runtimes specifically.
 - `arch`'s "Dependency & Runtime Currency" category is intentionally
