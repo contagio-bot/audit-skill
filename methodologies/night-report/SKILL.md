@@ -1,6 +1,6 @@
 ---
 name: night-report-local
-description: Run and interpret scripts/nightly-audit (nightly CLI pipeline, SMTP mail).
+description: Run and interpret scripts/nightly-audit (nightly CLI pipeline).
 license: MIT
 ---
 
@@ -33,22 +33,21 @@ Magellano “nightly CLI audit” (Flavio Lombardi / team):
 | **Node monorepo** (click2job) | `checks/deps_npm_audit.sh` — `npm audit --package-lock-only` in `node:22-alpine`, clean temp dir per workspace | knip@5, jscpd, large files (WARN) |
 | **Python** (bridge-jtt, track-feed-new) | `checks/deps_pip_audit.sh` — `pip-audit -r requirements.lock` in `python:3.12-slim`, Docker `--network=host` by default | ruff F401/F841 (WARN), optional jscpd |
 
-**Email:** SMTP (Gmail, `giorgio@aiperformance.it` → `giorgio@aiperformance.it`)
-via `lib/mail_smtp.py`, only on FAIL/ERROR by default. Credentials from
-env `SMTP_*`, `$AUDIT_SMTP_ENV_FILE`, `~/.config/aip-audit/smtp.env`
-(server) or repo `.env` (canonical source: `whatsapp-automation/.env`).
-Legacy Magellano repos used `mail_mandrill.py` — when bootstrapping into an
-AIP project always use the SMTP variant. One pipeline + one cron per
-project (never a single shared cron). `mail_smtp.py` forces IPv4
-(`AUDIT_SMTP_IPV4=1` default): on the OVH server Gmail rejects AUTH over IPv6
-with `535 BadCredentials` even though the password is valid — do not blame
-the password before testing IPv4 vs IPv6. Agent runs must set
-**`AUDIT_MAIL_DRY=1`** always unless the user explicitly requests a live
-send (almost never).
+**Email:** sent only on FAIL/ERROR by default, through the pipeline's
+mail sender (`mail_mandrill.py` in the legacy templates, `mail_smtp.py` in
+SMTP-based copies). Sender, recipients and credentials always come from
+the target repo's environment (`AUDIT_MAIL_TO`, `SMTP_*`, an env file
+outside the repo on the server) — never hard-code them in the pipeline or
+in this skill. One pipeline + one cron per project, never a single shared
+cron across repos. If SMTP auth fails with `535 BadCredentials` from a
+server but the same credentials work elsewhere, test IPv4 vs IPv6 before
+blaming the password (some providers reject AUTH from IPv6 hosts without
+reverse DNS). Agent runs must set **`AUDIT_MAIL_DRY=1`** always unless the
+user explicitly requests a live send (almost never).
 
 **Read-only on deployed tree:** scripts do not `git pull` or patch code.
 
-## Mandatory checks (AIP standard)
+## Mandatory checks
 
 Every nightly-audit pipeline must have **both**:
 
@@ -60,9 +59,9 @@ Every nightly-audit pipeline must have **both**:
    falling back to Dockerfile `FROM`s when a built image is absent.
 
 A pipeline with only the library check is **incomplete**: flag it and
-offer to add the image check. Canonical generic copy:
-`~/aip/application/odoo-crm/scripts/nightly-audit/checks/deps_image_trivy.sh`
-(identical in every AIP repo).
+offer to add the image check. The check must be generic (no image names
+hard-coded): read images from the production compose, so it stays correct
+when tags are bumped.
 
 Exceptions live in `scripts/nightly-audit/accepted-images.json`:
 `{"accepted":[{"image":"postgres:*","target":"usr/local/bin/gosu","pkg":"stdlib","reason":"…","until":"YYYY-MM-DD"}]}`
@@ -220,15 +219,14 @@ Do **not** commit `accepted-deps.json` changes without explicit user request.
 
 ## Bootstrap (when scripts are missing)
 
-AIP canonical copies (SMTP mail, preferred):
+Copy an existing `scripts/nightly-audit/` tree of the same flavor from
+another repo of the user (ask which one if several exist), then:
 
-- `~/aip/application/whatsapp-automation/scripts/nightly-audit/` — Python (pip-audit, `requirements.lock`) + `deps_image_trivy`
-- `~/aip/application/mcp-gateway-aip/scripts/nightly-audit/` — Node workspaces (npm audit + `accepted-deps.json`) + `deps_image_trivy`
-- `~/aip/application/odoo-crm/scripts/nightly-audit/` — Odoo/Docker (no manifest): `deps_image_trivy` (generic, images from prod compose) + `odoo_base_age` (WARN >30d, FAIL >60d on `odoo:19.0-YYYYMMDD` pin)
-- Cron on OVH server: whatsapp 03:30, mcp-gateway 03:45, odoo-crm 04:00
-- Makefile targets: `audit-dry`, `audit-install-remote` (per-project cron, staggered), `audit-run-remote`, `audit-uninstall-remote`
+- keep the library check of the ecosystem **and** add `deps_image_trivy.sh`;
+- keep mail settings in the target environment, not in the copied files;
+- give each repo its own cron entry, staggered to avoid parallel Docker load.
 
-Legacy Magellano copies (Mandrill mail; **library checks only, no image
+Known template copies (Mandrill mail; **library checks only, no image
 scan** — when bootstrapping from these, add `deps_image_trivy.sh`):
 
 - `bridge-jtt/scripts/nightly-audit/` — Python template + `cleanup_logs.sh`
@@ -247,8 +245,8 @@ Bootstrap steps for the agent (only if user asks to install):
 | Variable | Effect |
 |----------|--------|
 | `AUDIT_MAIL_DRY=1` | Never SMTP; print body when mail would send |
-| `AUDIT_MAIL_TO` | Recipients (default `giorgio@aiperformance.it`) |
-| `AUDIT_SMTP_ENV_FILE` | Env file with `SMTP_*` (parsed, never sourced) |
+| `AUDIT_MAIL_TO` | Recipients (comma-separated; required for live sends) |
+| `AUDIT_SMTP_ENV_FILE` | (SMTP variant) env file with `SMTP_*`, parsed never sourced |
 | `AUDIT_MAIL_ALWAYS=1` | Heartbeat on OK/WARN (avoid in agent runs) |
 | `AUDIT_LOG_ROOT` | Log directory (default `/var/log/magellano-audit/…` on EC2) |
 | `AUDIT_ALLOW_HOST_TOOLS=1` | Host npm/pip instead of Docker |
