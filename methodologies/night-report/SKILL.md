@@ -32,6 +32,7 @@ Magellano “nightly CLI audit” (Flavio Lombardi / team):
 |-------------|------------|-------------------------|
 | **Node monorepo** (click2job) | `checks/deps_npm_audit.sh` — `npm audit --package-lock-only` in `node:22-alpine`, clean temp dir per workspace | knip@5, jscpd, large files (WARN) |
 | **Python** (bridge-jtt, track-feed-new) | `checks/deps_pip_audit.sh` — `pip-audit -r requirements.lock` in `python:3.12-slim`, Docker `--network=host` by default | ruff F401/F841 (WARN), optional jscpd |
+| **Config-driven** (`audit.conf` + `sync.sh`) | `checks/deps_node.sh` / `checks/deps_python.sh`, enabled by `audit.conf` vars; `sync.sh` ships only the pipeline + lockfiles to a directory outside the webroot and installs the cron | `checks/deps_images.sh` (Trivy, `IMAGE_SCAN=1`) |
 
 **Email:** sent only on FAIL/ERROR by default, through the pipeline's
 mail sender (`mail_mandrill.py` in the legacy templates, `mail_smtp.py` in
@@ -59,7 +60,17 @@ Every nightly-audit pipeline must have **both**:
    falling back to Dockerfile `FROM`s when a built image is absent.
 
 A pipeline with only the library check is **incomplete**: flag it and
-offer to add the image check. The check must be generic (no image names
+offer to add the image check.
+
+When the pipeline runs from a copy that does **not** contain the compose
+file (e.g. the `sync.sh` flavor, which ships only lockfiles), reading the
+compose cannot work there: select the images of the project's **running
+containers** instead (`docker ps` filtered on the compose project name
+and/or `com.docker.compose.project.working_dir` = the app directory), with
+the compose only as a local fallback. Finding no image must be ERROR, not
+OK. Skip the check (with the reason written in the config) only when
+production runs no containers at all, e.g. a static site whose compose is
+for local development only. The check must be generic (no image names
 hard-coded): read images from the production compose, so it stays correct
 when tags are bumped.
 
@@ -225,6 +236,8 @@ another repo of the user (ask which one if several exist), then:
 - keep the library check of the ecosystem **and** add `deps_image_trivy.sh`;
 - keep mail settings in the target environment, not in the copied files;
 - give each repo its own cron entry, staggered to avoid parallel Docker load.
+- share one Trivy cache across projects on the same host and serialize
+  scans on it (`flock`), so the vulnerability DB is downloaded once a night.
 
 Known template copies (Mandrill mail; **library checks only, no image
 scan** — when bootstrapping from these, add `deps_image_trivy.sh`):
