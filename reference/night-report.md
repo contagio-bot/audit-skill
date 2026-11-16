@@ -16,9 +16,10 @@ local methodology.
   the **production-shaped** toolchain (Docker + `pip-audit` or
   `npm audit --package-lock-only` + allowlist) plus lightweight
   deadcode/dup signals.
-- Every pipeline must include `deps_image_trivy.sh` (container images:
+- Every pipeline must include `deps_images.sh` (Trivy on container images:
   DB, cache, app base OS) next to the library check — see methodology
-  § Mandatory checks.
+  § Mandatory checks. Magellano `run.sh` repos gate it with `AUDIT_IMAGE_SCAN`
+  in `repo-local.sh` (e.g. wapp-automation).
 - Recommended order in a full hygiene pass:
   **`deps` → remediate → `night-report`** (confirm cron-equivalent green),
   or **`night-report` alone** for a fast CVE/deadcode smoke on a checkout.

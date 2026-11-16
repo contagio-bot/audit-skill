@@ -31,7 +31,8 @@ Magellano “nightly CLI audit” (Flavio Lombardi / team):
 | Repo flavor | Deps check | Other checks (typical) |
 |-------------|------------|-------------------------|
 | **Node monorepo** (click2job) | `checks/deps_npm_audit.sh` — `npm audit --package-lock-only` in `node:22-alpine`, clean temp dir per workspace | knip@5, jscpd, large files (WARN) |
-| **Python** (bridge-jtt, track-feed-new) | `checks/deps_pip_audit.sh` — `pip-audit -r requirements.lock` in `python:3.12-slim`, Docker `--network=host` by default | ruff F401/F841 (WARN), optional jscpd |
+| **Python** (bridge-jtt, track-feed-new) | `checks/deps_pip_audit.sh` — `pip-audit -r requirements.lock` in `python:3.12-slim`, Docker `--network=host` by default | ruff F401/F841 (WARN), optional jscpd; add `deps_images.sh` if Docker prod (see mandatory checks) |
+| **Python Magellano** (`run.sh` + `repo-local.sh`, e.g. wapp-automation) | same `deps_pip_audit.sh` | `deps_images.sh` when `AUDIT_IMAGE_SCAN=1` in `repo-local.sh` (`IMAGE_MATCH`, `IMAGE_COMPOSE_FILE`) |
 | **Config-driven** (`audit.conf` + `sync.sh`) | `checks/deps_node.sh` / `checks/deps_python.sh`, enabled by `audit.conf` vars; `sync.sh` ships only the pipeline + lockfiles to a directory outside the webroot and installs the cron | `checks/deps_images.sh` (Trivy, `IMAGE_SCAN=1`) |
 
 **Email:** sent only on FAIL/ERROR by default, through the pipeline's
@@ -54,8 +55,9 @@ Every nightly-audit pipeline must have **both**:
 
 1. a library check for the app ecosystem (`deps_pip_audit.sh`,
    `deps_npm_audit.sh`, …), and
-2. **`checks/deps_image_trivy.sh`** whenever the repo has a `Dockerfile*`
-   or compose file. It scans every image of the production compose
+2. **`checks/deps_images.sh`** (same script is sometimes named
+   `deps_image_trivy.sh` in older copies) whenever the repo has a
+   `Dockerfile*` or compose file. It scans every image of the production compose
    (`docker compose config --images`: database, cache, built app images),
    falling back to Dockerfile `FROM`s when a built image is absent.
 
@@ -190,6 +192,17 @@ Primary artifacts (under `AUDIT_RUN_DIR`):
   same as “vulnerable”; retry on EC2 or fix network.
 - **OK:** `pip-audit` rc 0.
 
+**Deps — container images (`deps_images.sh` / Trivy):**
+
+- **FAIL:** fixable **HIGH/CRITICAL** not covered by `accepted-images.json`.
+- **WARN:** only time-bound accepted exceptions still valid (`until`).
+- **ERROR:** no running/compose images (`IMAGE_MATCH` wrong, app stopped),
+  Docker socket, or Trivy pull/cache lock timeout.
+- **OK:** clean scan. Artifacts: `deps-images.log`, `trivy-*.json`.
+- On EC2 prefer **running containers** (`IMAGE_MATCH` = compose project name
+  and/or absolute app path on server); compose `config --images` is local
+  fallback (`--project-directory` = repo root when env files live at root).
+
 **Non-deps checks:** usually **WARN** on findings; treat **ERROR** as
 infra (ruff/knip/jscpd failed to install/run).
 
@@ -204,6 +217,7 @@ Exit codes from `run.sh`:
 | night-report | Follow-up |
 |--------------|-----------|
 | deps **FAIL** | Run **`audit deps --persist`** (or continue remediation); compare with `accepted-deps.json` |
+| deps-images **FAIL** | Rebuild/pull images, bump base `FROM`, or add justified row to `accepted-images.json` (judgment → user OK) |
 | deps **OK** but last `audit deps` was bad | Likely remediated — suggest updating `AUDIT-CONTEXT.md` run-log |
 | deadcode **WARN** | Optional **`audit deadcode`** for human triage |
 | **ERROR** on Python deps | Fix Docker network / run on EC2; do not bump packages blindly |
@@ -233,16 +247,19 @@ Do **not** commit `accepted-deps.json` changes without explicit user request.
 Copy an existing `scripts/nightly-audit/` tree of the same flavor from
 another repo of the user (ask which one if several exist), then:
 
-- keep the library check of the ecosystem **and** add `deps_image_trivy.sh`;
+- keep the library check of the ecosystem **and** add `deps_images.sh`;
 - keep mail settings in the target environment, not in the copied files;
 - give each repo its own cron entry, staggered to avoid parallel Docker load.
 - share one Trivy cache across projects on the same host and serialize
   scans on it (`flock`), so the vulnerability DB is downloaded once a night.
 
-Known template copies (Mandrill mail; **library checks only, no image
-scan** — when bootstrapping from these, add `deps_image_trivy.sh`):
+Known template copies (Mandrill `run.sh`):
 
+- `wapp-automation/scripts/nightly-audit/` — Python + **`deps_images.sh`**
+  (`repo-local.sh`: `AUDIT_IMAGE_SCAN`, `IMAGE_MATCH`) — reference for
+  Magellano EC2 Docker apps
 - `bridge-jtt/scripts/nightly-audit/` — Python template + `cleanup_logs.sh`
+  (add `deps_images.sh` if not present)
 - `click2job/scripts/nightly-audit/` — Node template + `accepted-deps.json`
 - `track-feed-new/scripts/nightly-audit/` — Python (lock under `backend/`)
 
@@ -268,6 +285,11 @@ Bootstrap steps for the agent (only if user asks to install):
 | `AUDIT_PYTHON_IMAGE` | Default `python:3.12-slim` |
 | `AUDIT_ACCEPTED_DEPS` | Path to allowlist JSON (Node) |
 | `AUDIT_SKIP_DOTENV=1` | Do not source repo `.env` |
+| `AUDIT_IMAGE_SCAN` | `1` runs `deps_images.sh` (Magellano `run.sh` + `repo-local.sh`) |
+| `IMAGE_MATCH` | Compose project name and/or absolute prod app path for `docker ps` filter |
+| `IMAGE_COMPOSE_FILE` | Fallback compose file (e.g. `deploy/docker-compose.prod.yml`) |
+| `AUDIT_TRIVY_IMAGE` / `AUDIT_TRIVY_CACHE` | Trivy container tag; shared host cache dir |
+| `AUDIT_ACCEPTED_IMAGES` | Path to `accepted-images.json` |
 
 ## Limits
 
